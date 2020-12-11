@@ -84,6 +84,7 @@ export default {
 			svelte({
 				generate: 'ssr',
 				hydratable: true,
+				preprocess: autoPreprocess(),
 				dev
 			}),
 			url({
