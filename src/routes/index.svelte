@@ -34,6 +34,10 @@
 	})
 </script>
 
+<svelte:head>
+	<title>Home</title>
+</svelte:head>
+
 <style lang="scss">
 	:global(body) {
 		font-family: monospace;
