@@ -14,19 +14,16 @@
 	.wrapper {
 		display: grid;
 		justify-items: center;
+		justify-content: center;
 		grid-auto-flow: row;
-	}
-
-	.tixy-wrapper {
-		width: 60vw;
-		height: 60vw;
+		grid-template-columns: #{'min(70vh, 90vw)'};
 	}
 
 	.input-wrapper {
+		width: 100%;
 		display: block;
-		width: 60vw;
 		color: white;
-		margin-top: 10vh;
+		margin-top: 5vh;
 	}
 
 	textarea {
@@ -52,9 +49,7 @@
 </style>
 
 <div class="wrapper">
-	<div class="tixy-wrapper">
-		<CanvasTixy size={size} functionBody={functionBodyInputVal}/>
-	</div>
+	<CanvasTixy size={size} functionBody={functionBodyInputVal}/>
 
 	<div class="input-wrapper">
 		<p class="comment">// time (seconds), index, column, row</p>
