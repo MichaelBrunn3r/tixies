@@ -1,23 +1,30 @@
 <script lang="ts">
 	import CanvasTixy from '../components/CanvasTixy.svelte';
-	import { Tixy } from '../data/tixies';
-	import { onMount } from 'svelte';
+	import InlineInput from 'svelte-inline-input';
+	import { getTixy } from '../data/tixies';
+	import { onMount, createEventDispatcher } from 'svelte';
 
-	export let tixy: Tixy;
+	export let tixyId: string;
+	let dispatch = createEventDispatcher();
+
+	let n;
+	let speed;
+	let code;
+	let comments;
+	$: {
+		const tixy = getTixy(tixyId);
+		n = tixy.n;
+		speed = tixy.speed;
+		code = tixy.code;
+		comments = tixy.comments;
+	}
 
 	let time=0;
-	let nInputVal = tixy.n.toString();
-	let speedInputVal = tixy.speed.toString();
-
-	$: {
-		tixy.n = Math.min(128, nInputVal ? parseInt(nInputVal) : tixy.n);
-		tixy.speed = parseFloat(speedInputVal);
-	}
 
 	onMount(() => {
 		function update() {
 			requestAnimationFrame(update);
-			time = window.performance.now() / tixy.speed / 1000;
+			time = window.performance.now() / speed / 1000;
 		}
 		const anim = requestAnimationFrame(update);
 
@@ -61,25 +68,19 @@
 	.comment {
 		color: gray;
 	}
-
-	.spaninput {
-		font-weight: bolder;
-	}
 </style>
 
 <div class="wrapper">
-	<CanvasTixy {tixy} {time}/>
+	<CanvasTixy {code} {n} {time} on:click={() => dispatch('clickTixy')}/>
 
 	<div class="input-wrapper">
-		{#each tixy.comments as comment}
+		{#each comments as comment}
 			<p class="comment">// {comment}</p>
 		{/each}
-		<p class="comment">// time *
-			<span class="spaninput" bind:textContent={speedInputVal} contenteditable=true on:input=></span>, index, column, row,
-			<span class="spaninput" bind:textContent={nInputVal} contenteditable=true on:input=>16</span> circles
+		<p class="comment">// time * <InlineInput type="number" bind:value={speed}/>, index, column, row, <InlineInput type="number" bind:value={n}/> circles
 		</p>
 		<p>(t,i,x,y,n) => &#123;</p>
-		<div class="input" contenteditable=true bind:textContent={tixy.code}></div>
+		<div class="input" contenteditable=true bind:textContent={code}></div>
 		<p>&#125;</p>
 	</div>
 </div>

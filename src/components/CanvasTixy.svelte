@@ -4,11 +4,12 @@
 	import { constrain } from '../utils/math';
 	import { Tixy } from '../data/tixies';
 
-	export let tixy: Tixy;
+	export let code: string;
+	export let n: number;
 	export let time: number;
 	export let resolution = 1800;
 
-	$: radius = resolution / tixy.n / 2;
+	$: radius = resolution / n / 2;
 	$: diameter = radius*2;
 
 	let dispatch = createEventDispatcher();
@@ -24,7 +25,7 @@
 		try {
 			transform = new Function('t', 'i', 'x', 'y', 'n', `
 				try {
-					{${tixy.code}};
+					{${code}};
 				} catch(e) {
 					return 0;
 				}
@@ -55,9 +56,9 @@
 	function drawShapes(time: number, drawShape: (ctx: CanvasRenderingContext2D, x:number, y:number, scale:number, color:string) => any) {
 		clear();
 
-		for(let y=0; y<tixy.n; y++) {
-			for(let x=0; x<tixy.n; x++) {
-				const scale = constrain(transform(time, y*tixy.n+x, x, y, tixy.n), -1, 1);
+		for(let y=0; y<n; y++) {
+			for(let x=0; x<n; x++) {
+				const scale = constrain(transform(time, y*n+x, x, y, n), -1, 1);
 				drawShape(ctx, x, y, Math.abs(scale), scale < 0 ? color1 : color2);
 			}
 		}
