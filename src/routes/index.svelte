@@ -26,16 +26,9 @@
 		margin-top: 5vh;
 	}
 
-	textarea {
+	.input {
 		width: 100%;
-
-		background: transparent;
-		color: white;
-		border: transparent;
-		resize: vertical;
-		padding: 0;
-		padding-left: 2em;
-		margin: 0;
+		margin-left: 2em;
 	}
 
 	p {
@@ -54,7 +47,7 @@
 	<div class="input-wrapper">
 		<p class="comment">// time (seconds), index, column, row</p>
 		<p>(t,i,x,y) => &#123;</p>
-		<textarea type="text" bind:value={functionBodyInputVal}/>
+		<div class="input" contenteditable=true bind:textContent={functionBodyInputVal}></div>
 		<p>&#125;</p>
 	</div>
 </div>
