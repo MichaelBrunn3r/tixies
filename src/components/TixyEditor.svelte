@@ -14,12 +14,10 @@
 		tixy.speed = parseFloat(speedInputVal);
 	}
 
-
-
 	onMount(() => {
 		function update() {
 			requestAnimationFrame(update);
-			time = window.performance.now() / 1000;
+			time = window.performance.now() / tixy.speed / 1000;
 		}
 		const anim = requestAnimationFrame(update);
 
@@ -73,7 +71,9 @@
 	<CanvasTixy {tixy} {time}/>
 
 	<div class="input-wrapper">
-		<p class="comment">// {tixy.name}</p>
+		{#each tixy.comments as comment}
+			<p class="comment">// {comment}</p>
+		{/each}
 		<p class="comment">// time *
 			<span class="spaninput" bind:textContent={speedInputVal} contenteditable=true on:input=></span>, index, column, row,
 			<span class="spaninput" bind:textContent={nInputVal} contenteditable=true on:input=>16</span> circles

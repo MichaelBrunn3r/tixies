@@ -3,12 +3,14 @@ export class Tixy {
 	code: string
 	n: number
 	speed: number
+	comments: string[]
 
-	constructor(name: string, code: string, n: number = 16, speed: number = 1) {
+	constructor(name: string, code: string, n: number = 16, speed: number = 1, comments = null) {
 		this.name = name;
 		this.code = code;
 		this.n = n;
 		this.speed = speed;
+		this.comments = comments || new Array(name);
 	}
 }
 
