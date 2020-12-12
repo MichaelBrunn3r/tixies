@@ -1,72 +1,60 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { drawCircle } from '../utils/canvas';
-	import { constrain } from '../utils/math';
+	import * as THREE from "three";
 
 	export let functionBody: string;
-
 	export let size;
-	$: radius = canvasSize / size / 2;
-	$: diameter = radius*2;
 
-	let color1 = '#FF0000';
-	let color2 = '#FFFFFF';
-
-	let canvas: HTMLCanvasElement;
-	let ctx: CanvasRenderingContext2D;
+	let canvas;
 	let canvasSize = 1800;
 
-	let speed = 1
+	let scene;
+	let camera;
+	let renderer;
 
-	let transform;
-	$: {
-		try {
-			transform = new Function('t', 'i', 'x', 'y', `
-				try {
-					{${functionBody}};
-				} catch(e) {
-					return 0;
-				}
-			`);
-		} catch(e) {
-			transform = () => 1;
-		}
-	}
+	let radius = canvasSize/size/2;
+	let geometryResolution = Math.ceil(100/Math.log(size));
+	let circleGeometry = new THREE.CircleBufferGeometry(radius, geometryResolution);
+	let materialWhite = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+	let materialRed = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
 
-	// time, index, columnIdx, rowIdx
-	// const transi = (t,i,x,y) => Math.sin(t);
+	let circles: Array<THREE.Mesh<any, THREE.MeshBasicMaterial>> = [];
 
 	onMount(async () => {
-		ctx = canvas.getContext("2d");
-		ctx.imageSmoothingEnabled = true;
+		setup();
 
-		let frame;
-		function update() {
-			const t = window.performance.now() * speed/1000;
-			drawShapes(t, (ctx,x,y,s,c) => drawCircle(ctx,radius + x*diameter,radius + y*diameter,radius*s,c));
-			frame = requestAnimationFrame(update);
-		}
-
-		frame = requestAnimationFrame(update)
-
-		return () => {
-			cancelAnimationFrame(frame);
-		}
+		animate();
 	})
 
-	function clear() {
-		ctx.clearRect(0,0,canvas.width,canvas.height);
-	}
+	function setup() {
+		scene = new THREE.Scene();
 
-	function drawShapes(time: number, drawShape: (ctx: CanvasRenderingContext2D, x:number, y:number, scale:number, color:string) => any) {
-		clear();
+		camera = new THREE.OrthographicCamera(-canvasSize/2, canvasSize/2, canvasSize/2, -canvasSize/2, .1, 4)
+		scene.add(camera);
+
+		renderer = new THREE.WebGLRenderer({
+			canvas: canvas,
+			antialias: true
+		});
+
+
+		const offsetX = -canvasSize/2+radius;
+		const offsetY = canvasSize/2-radius;
 
 		for(let y=0; y<size; y++) {
 			for(let x=0; x<size; x++) {
-				const scale = constrain(transform(time, y*size+x, x, y), -1, 1);
-				drawShape(ctx, x, y, Math.abs(scale), scale < 0 ? color1 : color2);
+				let circle = new THREE.Mesh( circleGeometry, materialWhite );
+				circle.position.set(offsetX+canvasSize/size*x,offsetY-canvasSize/size*y,1);
+				circles.push(circle);
+				scene.add(circle);
 			}
 		}
+		camera.position.z = 5;
+	}
+
+	function animate() {
+		// requestAnimationFrame( animate );
+		renderer.render( scene, camera );
 	}
 </script>
 
@@ -77,4 +65,4 @@
 	}
 </style>
 
-<canvas bind:this={canvas} width={canvasSize}, height={canvasSize}/>
+<canvas bind:this={canvas} width={canvasSize} height={canvasSize}/>

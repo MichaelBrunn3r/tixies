@@ -2,7 +2,7 @@
 	import CanvasTixy from '../components/CanvasTixy.svelte';
 
 	let functionBodyInputVal = "return Math.sin(y/8+t);";
-	let size = 32;
+	let size = 64;
 </script>
 
 <style lang="scss">
