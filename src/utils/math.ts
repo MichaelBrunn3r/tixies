@@ -28,6 +28,10 @@ export function hex(x: string) {
 	return parseInt(x, 16);
 }
 
+export function toHex(x: number) {
+	return x.toString(16);
+}
+
 /**
  * Converts a octal string to its equivalent decimal value
  * @param x the octal string
@@ -36,10 +40,18 @@ export function oct(x: string) {
 	return parseInt(x, 8);
 }
 
+export function toOct(x: number) {
+	return x.toString(8);
+}
+
 /**
  * Converts a binary string to its equivalent decimal value
  * @param x the binary string
  */
 export function bin(x: string) {
 	return parseInt(x, 2);
+}
+
+export function toBin(x: number) {
+	return x.toString(2);
 }
