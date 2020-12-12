@@ -1,8 +1,11 @@
 <script lang="ts">
+import { missing_component } from 'svelte/internal';
+
 	import CanvasTixy from '../components/CanvasTixy.svelte';
 
 	let functionBodyInputVal = "return Math.sin(y/8+t);";
-	let size = 32;
+	let nInputVal = "32";
+	$: n = Math.min(128,parseInt(nInputVal));
 </script>
 
 <style lang="scss">
@@ -39,14 +42,18 @@
 	.comment {
 		color: gray;
 	}
+
+	#ninput {
+		font-weight: bolder;
+	}
 </style>
 
 <div class="wrapper">
-	<CanvasTixy size={size} functionBody={functionBodyInputVal}/>
+	<CanvasTixy n={n} functionBody={functionBodyInputVal}/>
 
 	<div class="input-wrapper">
-		<p class="comment">// time (seconds), index, column, row</p>
-		<p>(t,i,x,y) => &#123;</p>
+		<p class="comment">// time, index, column, row, <span id="ninput" bind:textContent={nInputVal} contenteditable=true on:input=>16</span></p>
+		<p>(t,i,x,y,n) => &#123;</p>
 		<div class="input" contenteditable=true bind:textContent={functionBodyInputVal}></div>
 		<p>&#125;</p>
 	</div>

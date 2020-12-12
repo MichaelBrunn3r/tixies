@@ -5,8 +5,8 @@
 
 	export let functionBody: string;
 
-	export let size;
-	$: radius = canvasSize / size / 2;
+	export let n: number;
+	$: radius = canvasSize / n / 2;
 	$: diameter = radius*2;
 
 	let color1 = '#FF0000';
@@ -21,7 +21,7 @@
 	let transform;
 	$: {
 		try {
-			transform = new Function('t', 'i', 'x', 'y', `
+			transform = new Function('t', 'i', 'x', 'y', 'n', `
 				try {
 					{${functionBody}};
 				} catch(e) {
@@ -61,9 +61,9 @@
 	function drawShapes(time: number, drawShape: (ctx: CanvasRenderingContext2D, x:number, y:number, scale:number, color:string) => any) {
 		clear();
 
-		for(let y=0; y<size; y++) {
-			for(let x=0; x<size; x++) {
-				const scale = constrain(transform(time, y*size+x, x, y), -1, 1);
+		for(let y=0; y<n; y++) {
+			for(let x=0; x<n; x++) {
+				const scale = constrain(transform(time, y*n+x, x, y), -1, 1);
 				drawShape(ctx, x, y, Math.abs(scale), scale < 0 ? color1 : color2);
 			}
 		}
