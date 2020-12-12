@@ -4,18 +4,16 @@
 	import { onMount } from 'svelte';
 
 	let time=0;
+	const slowdown = 150;
 
 	onMount(() => {
 		function update() {
-			requestAnimationFrame(update);
-			if((window.performance.now() / 1000) - time > 0.1) {
-				time = window.performance.now() / 1000;
-			}
+			time += slowdown/1000;
 		}
-		const anim = requestAnimationFrame(update);
+		const anim = setInterval(update, slowdown);
 
 		return () => {
-			cancelAnimationFrame(anim);
+			clearInterval(anim);
 		}
 	})
 </script>
@@ -37,9 +35,18 @@
 		display: grid;
 		justify-content: center;
 		column-gap: 10px;
-		row-gap: 10px;
 		grid-auto-columns: 1fr;
 		grid-auto-flow: column;
+	}
+
+	.tixy {
+		display: grid;
+		justify-content: center;
+	}
+
+	.name-label {
+		color: gray;
+		text-align: center;
 	}
 
 	@media (max-width: 550px) {
@@ -58,7 +65,12 @@
 </style>
 
 <div class="container">
-	{#each tixies as tixy}
-		<CanvasTixy {tixy} {time} resolution={300} />
+	{#each tixies as tixy, id}
+		<div class="tixy">
+			<a href="tixy/{id}">
+				<CanvasTixy {tixy} {time} resolution={300}/>
+			</a>
+			<label class="name-label">{tixy.name}</label>
+		</div>
 	{/each}
 </div>

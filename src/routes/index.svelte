@@ -1,94 +1,19 @@
-<script lang="ts">
-	import CanvasTixy from '../components/CanvasTixy.svelte';
+<script>
+	import TixyEditor from '../components/TixyEditor.svelte';
 	import { tixies } from '../data/tixies';
-	import { onMount } from 'svelte';
 
-	let time=0;
-	let tixyIdx = 0;
-	let tixy = tixies[tixyIdx];
-	let nInputVal = tixy.n.toString();
-	let speedInputVal = tixy.speed.toString();
+	let tixyId = Math.round(Math.random()*(tixies.length-1));
 
-	$: {
-		tixy.n = Math.min(128, nInputVal ? parseInt(nInputVal) : tixy.n);
-		tixy.speed = parseFloat(speedInputVal);
-	}
-
-	function nextPreset() {
-		tixyIdx = (tixyIdx+1)%tixies.length
-		tixy = tixies[tixyIdx];
+	function nextTixy() {
+		tixyId = (tixyId+1)%tixies.length
+		tixy = tixies[tixyId];
 		nInputVal = tixy.n.toString();
 		speedInputVal = tixy.speed.toString();
 	}
-
-	onMount(() => {
-		function update() {
-			requestAnimationFrame(update);
-			time = window.performance.now() / 1000;
-		}
-		const anim = requestAnimationFrame(update);
-
-		return () => {
-			cancelAnimationFrame(anim);
-		}
-	})
 </script>
 
 <svelte:head>
 	<title>Home</title>
 </svelte:head>
 
-<style lang="scss">
-	:global(body) {
-		font-family: monospace;
-		background-color: rgb(44, 44, 44);
-	}
-
-	.wrapper {
-		display: grid;
-		justify-items: center;
-		justify-content: center;
-		grid-auto-flow: row;
-		grid-template-columns: #{'min(70vh, 90vw)'};
-	}
-
-	.input-wrapper {
-		width: 100%;
-		display: block;
-		color: white;
-		margin-top: 5vh;
-	}
-
-	.input {
-		width: 100%;
-		margin-left: 2em;
-	}
-
-	p {
-		padding: 0;
-		margin: 0;
-	}
-
-	.comment {
-		color: gray;
-	}
-
-	.spaninput {
-		font-weight: bolder;
-	}
-</style>
-
-<div class="wrapper">
-	<CanvasTixy {tixy} {time} on:click={nextPreset}/>
-
-	<div class="input-wrapper">
-		<p class="comment">// {tixy.name}</p>
-		<p class="comment">// time *
-			<span class="spaninput" bind:textContent={speedInputVal} contenteditable=true on:input=></span>, index, column, row,
-			<span class="spaninput" bind:textContent={nInputVal} contenteditable=true on:input=>16</span> circles
-		</p>
-		<p>(t,i,x,y,n) => &#123;</p>
-		<div class="input" contenteditable=true bind:textContent={tixy.code}></div>
-		<p>&#125;</p>
-	</div>
-</div>
+<TixyEditor {tixyId} />
