@@ -2,12 +2,11 @@
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { drawCircle } from '../utils/canvas';
 	import { constrain } from '../utils/math';
+	import { Tixy } from '../data/tixies';
 
-	export let speed: number;
-	export let functionBody: string;
-	export let n: number;
+	export let tixy: Tixy;
 
-	$: radius = canvasSize / n / 2;
+	$: radius = canvasSize / tixy.n / 2;
 	$: diameter = radius*2;
 
 	let dispatch = createEventDispatcher();
@@ -24,7 +23,7 @@
 		try {
 			transform = new Function('t', 'i', 'x', 'y', 'n', `
 				try {
-					{${functionBody}};
+					{${tixy.code}};
 				} catch(e) {
 					return 0;
 				}
@@ -43,7 +42,7 @@
 
 		let frame;
 		function update() {
-			const t = window.performance.now() * speed/1000;
+			const t = window.performance.now() * tixy.speed/1000;
 			drawShapes(t, (ctx,x,y,s,c) => drawCircle(ctx,radius + x*diameter,radius + y*diameter,radius*s,c));
 			frame = requestAnimationFrame(update);
 		}
@@ -62,9 +61,9 @@
 	function drawShapes(time: number, drawShape: (ctx: CanvasRenderingContext2D, x:number, y:number, scale:number, color:string) => any) {
 		clear();
 
-		for(let y=0; y<n; y++) {
-			for(let x=0; x<n; x++) {
-				const scale = constrain(transform(time, y*n+x, x, y, n), -1, 1);
+		for(let y=0; y<tixy.n; y++) {
+			for(let x=0; x<tixy.n; x++) {
+				const scale = constrain(transform(time, y*tixy.n+x, x, y, tixy.n), -1, 1);
 				drawShape(ctx, x, y, Math.abs(scale), scale < 0 ? color1 : color2);
 			}
 		}

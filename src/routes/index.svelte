@@ -3,13 +3,14 @@
 	import { tixies } from '../data/tixies';
 
 	let tixyIdx = 0;
-	let tixy = tixies[0];
-
+	let tixy = tixies[tixyIdx];
 	let nInputVal = tixy.n.toString();
-	$: n = Math.min(128, nInputVal ? parseInt(nInputVal) : tixy.n);
-
 	let speedInputVal = tixy.speed.toString();
-	$: speed = parseFloat(speedInputVal);
+
+	$: {
+		tixy.n = Math.min(128, nInputVal ? parseInt(nInputVal) : tixy.n);
+		tixy.speed = parseFloat(speedInputVal);
+	}
 
 	function nextPreset() {
 		tixyIdx = (tixyIdx+1)%tixies.length
@@ -60,7 +61,7 @@
 </style>
 
 <div class="wrapper">
-	<CanvasTixy n={n} functionBody={tixy.code} {speed} on:click={nextPreset}/>
+	<CanvasTixy {tixy} on:click={nextPreset}/>
 
 	<div class="input-wrapper">
 		<p class="comment">// {tixy.name}</p>
