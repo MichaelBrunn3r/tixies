@@ -1,13 +1,14 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
 	import { drawCircle } from '../utils/canvas';
 	import { constrain } from '../utils/math';
 
 	export let functionBody: string;
-
 	export let n: number;
 	$: radius = canvasSize / n / 2;
 	$: diameter = radius*2;
+
+	let dispatch = createEventDispatcher();
 
 	let color1 = '#FF0000';
 	let color2 = '#FFFFFF';
@@ -63,7 +64,7 @@
 
 		for(let y=0; y<n; y++) {
 			for(let x=0; x<n; x++) {
-				const scale = constrain(transform(time, y*n+x, x, y), -1, 1);
+				const scale = constrain(transform(time, y*n+x, x, y, n), -1, 1);
 				drawShape(ctx, x, y, Math.abs(scale), scale < 0 ? color1 : color2);
 			}
 		}
@@ -77,4 +78,4 @@
 	}
 </style>
 
-<canvas bind:this={canvas} width={canvasSize}, height={canvasSize}/>
+<canvas bind:this={canvas} width={canvasSize}, height={canvasSize} on:click={() => dispatch('click')}/>

@@ -1,11 +1,16 @@
 <script lang="ts">
-import { missing_component } from 'svelte/internal';
-
 	import CanvasTixy from '../components/CanvasTixy.svelte';
+	import { presets } from '../data/tixies';
 
-	let functionBodyInputVal = "return Math.sin(y/8+t);";
+	let presetIdx = 0;
+	$: functionBodyInputVal = presets[presetIdx];
+
 	let nInputVal = "32";
 	$: n = Math.min(128,parseInt(nInputVal));
+
+	function nextPreset() {
+		presetIdx = (presetIdx+1)%presets.length
+	}
 </script>
 
 <style lang="scss">
@@ -49,7 +54,7 @@ import { missing_component } from 'svelte/internal';
 </style>
 
 <div class="wrapper">
-	<CanvasTixy n={n} functionBody={functionBodyInputVal}/>
+	<CanvasTixy n={n} functionBody={functionBodyInputVal} on:click={nextPreset}/>
 
 	<div class="input-wrapper">
 		<p class="comment">// time, index, column, row, <span id="ninput" bind:textContent={nInputVal} contenteditable=true on:input=>16</span></p>
