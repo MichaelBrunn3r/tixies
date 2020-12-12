@@ -1,4 +1,4 @@
-class Tixy {
+export class Tixy {
 	name: string
 	code: string
 	n: number

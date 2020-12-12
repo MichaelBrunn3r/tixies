@@ -5,6 +5,7 @@
 	import { Tixy } from '../data/tixies';
 
 	export let tixy: Tixy;
+	export let time: number;
 
 	$: radius = canvasSize / tixy.n / 2;
 	$: diameter = radius*2;
@@ -33,25 +34,18 @@
 		}
 	}
 
+	$: {
+		if(ctx) {
+			drawShapes(time, (ctx,x,y,s,c) => drawCircle(ctx,radius + x*diameter,radius + y*diameter,radius*s,c));
+		}
+	}
+
 	// time, index, columnIdx, rowIdx
 	// const transi = (t,i,x,y) => Math.sin(t);
 
 	onMount(async () => {
 		ctx = canvas.getContext("2d");
 		ctx.imageSmoothingEnabled = true;
-
-		let frame;
-		function update() {
-			const t = window.performance.now() * tixy.speed/1000;
-			drawShapes(t, (ctx,x,y,s,c) => drawCircle(ctx,radius + x*diameter,radius + y*diameter,radius*s,c));
-			frame = requestAnimationFrame(update);
-		}
-
-		frame = requestAnimationFrame(update)
-
-		return () => {
-			cancelAnimationFrame(frame);
-		}
 	})
 
 	function clear() {

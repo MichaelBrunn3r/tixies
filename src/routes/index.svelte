@@ -1,7 +1,9 @@
 <script lang="ts">
 	import CanvasTixy from '../components/CanvasTixy.svelte';
 	import { tixies } from '../data/tixies';
+	import { onMount } from 'svelte';
 
+	let time=0;
 	let tixyIdx = 0;
 	let tixy = tixies[tixyIdx];
 	let nInputVal = tixy.n.toString();
@@ -18,6 +20,18 @@
 		nInputVal = tixy.n.toString();
 		speedInputVal = tixy.speed.toString();
 	}
+
+	onMount(() => {
+		function update() {
+			requestAnimationFrame(update);
+			time = window.performance.now() / 1000;
+		}
+		const anim = requestAnimationFrame(update);
+
+		return () => {
+			cancelAnimationFrame(anim);
+		}
+	})
 </script>
 
 <style lang="scss">
@@ -61,7 +75,7 @@
 </style>
 
 <div class="wrapper">
-	<CanvasTixy {tixy} on:click={nextPreset}/>
+	<CanvasTixy {tixy} {time} on:click={nextPreset}/>
 
 	<div class="input-wrapper">
 		<p class="comment">// {tixy.name}</p>
