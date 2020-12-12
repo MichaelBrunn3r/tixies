@@ -3,8 +3,10 @@
 	import { drawCircle } from '../utils/canvas';
 	import { constrain } from '../utils/math';
 
+	export let speed: number;
 	export let functionBody: string;
 	export let n: number;
+
 	$: radius = canvasSize / n / 2;
 	$: diameter = radius*2;
 
@@ -15,10 +17,8 @@
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
+
 	let canvasSize = 1800;
-
-	let speed = 1
-
 	let transform;
 	$: {
 		try {
