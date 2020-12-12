@@ -23,7 +23,7 @@
 		try {
 			transform = new Function('t', 'i', 'x', 'y', `
 				try {
-					return ${functionBody};
+					{${functionBody}};
 				} catch(e) {
 					return 0;
 				}
