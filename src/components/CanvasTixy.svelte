@@ -6,8 +6,9 @@
 
 	export let tixy: Tixy;
 	export let time: number;
+	export let resolution = 1800;
 
-	$: radius = canvasSize / tixy.n / 2;
+	$: radius = resolution / tixy.n / 2;
 	$: diameter = radius*2;
 
 	let dispatch = createEventDispatcher();
@@ -18,7 +19,6 @@
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
 
-	let canvasSize = 1800;
 	let transform;
 	$: {
 		try {
@@ -71,4 +71,4 @@
 	}
 </style>
 
-<canvas bind:this={canvas} width={canvasSize}, height={canvasSize} on:click={() => dispatch('click')}/>
+<canvas bind:this={canvas} width={resolution}, height={resolution} on:click={() => dispatch('click')}/>
