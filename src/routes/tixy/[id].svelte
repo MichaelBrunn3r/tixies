@@ -9,9 +9,10 @@
 
 <script>
 	import TixyEditor from '../../components/TixyEditor.svelte';
+	import { tixies } from '../../data/tixies';
 
 	export let id;
-	console.log(id);
+	$: tixy = Object.assign({}, tixies[id]);
 </script>
 
-<TixyEditor tixyId={id} />
+<TixyEditor {tixy} />

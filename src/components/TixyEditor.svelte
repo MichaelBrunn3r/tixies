@@ -1,12 +1,11 @@
 <script lang="ts">
 	import CanvasTixy from '../components/CanvasTixy.svelte';
-	import { tixies } from '../data/tixies';
+	import { Tixy } from '../data/tixies';
 	import { onMount } from 'svelte';
 
-	export let tixyId: number;
+	export let tixy: Tixy;
 
 	let time=0;
-	let tixy = tixies[tixyId];
 	let nInputVal = tixy.n.toString();
 	let speedInputVal = tixy.speed.toString();
 

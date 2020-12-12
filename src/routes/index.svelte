@@ -2,13 +2,11 @@
 	import TixyEditor from '../components/TixyEditor.svelte';
 	import { tixies } from '../data/tixies';
 
-	let tixyId = Math.round(Math.random()*(tixies.length-1));
+	let tixyId = 0;
+	$: tixy = Object.assign({},tixies[tixyId]);
 
 	function nextTixy() {
-		tixyId = (tixyId+1)%tixies.length
-		tixy = tixies[tixyId];
-		nInputVal = tixy.n.toString();
-		speedInputVal = tixy.speed.toString();
+		tixyId = (tixies+1)%tixies.length
 	}
 </script>
 
@@ -16,4 +14,4 @@
 	<title>Home</title>
 </svelte:head>
 
-<TixyEditor {tixyId} />
+<TixyEditor {tixy} />
