@@ -18,8 +18,8 @@ const tixies = {
 	'sin_up': new Tixy('Sinus up', 'return Math.sin(y/8+t);', 16),
 	'pulse': new Tixy('Pulse', 'return Math.sin(t);', 16, 0.7),
 	'noise': new Tixy('Random noise', 'return Math.random() < 0.1;'),
-	'ripple_in': new Tixy('Ripple In', 'return Math.sin(Math.sqrt(Math.pow(n/2-x,2)+Math.pow(n/2-y,2))+t);', 32, 2),
-	'ripple_circ': new Tixy('Circular Ripple', 'let radius = n/4;return Math.sin(Math.sqrt(Math.pow(n/2-x+Math.sin(t)*radius,2)+Math.pow(n/2-y+Math.cos(t)*radius,2))+t);', 32, 0.5),
+	'ripple_in': new Tixy('Ripple In', 'return Math.sin(Math.sqrt(Math.pow(n/2-x-0.5,2)+Math.pow(n/2-y-0.5,2))+t);', 32, 2),
+	'ripple_circ': new Tixy('Circular Ripple', 'let radius = n/4;return Math.sin(Math.sqrt(Math.pow(n/2-x-0.5+Math.sin(t)*radius,2)+Math.pow(n/2-y-0.5+Math.cos(t)*radius,2))+t);', 32, 0.5),
 
 	'tut-start': new Tixy('', 'return Math.sin(y/8+t);', 16, 1, ['Inspired by <a href="https://tixy.land">tixy.land</a>', 'Start the tutorial by clicking the dots']),
 	'tut-visibility': new Tixy('', 'return i%3 == 0;', 16, 1, ['0/1 = false/true => hide/show dot']),
