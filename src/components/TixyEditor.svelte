@@ -71,7 +71,7 @@
 		{#each comments as comment}
 			<p class="comment" >// {@html comment}</p>
 		{/each}
-		<p class="comment">// time * <InlineInput type="number" bind:value={speed}/>, index, column, row, <InlineInput type="number" bind:value={n}/> circles
+		<p class="comment">/* time * <InlineInput type="number" bind:value={speed}/>, index, column, row, <InlineInput type="number" bind:value={n}/>² dots */
 		</p>
 		<p class="code">(t,i,x,y,n) => &#123;</p>
 		<div class="code-input code" contenteditable=true bind:textContent={code}></div>
