@@ -9,6 +9,6 @@
 </style>
 
 <div class="container">
-	<a href='/'>HOME</a>
+	<a href='./'>HOME</a>
 	<a href='gallery'>GALLERY</a>
 </div>
