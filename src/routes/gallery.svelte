@@ -2,19 +2,14 @@
 	import CanvasTixy from '../components/CanvasTixy.svelte';
 	import { gallery, getTixy } from '../data/tixies';
 	import { onMount } from 'svelte';
+	import { animationFrameEveryXms } from '../data/animation';
 
 	let time=0;
-	const slowdown = 150;
 
 	onMount(() => {
-		function update() {
-			time += slowdown/1000;
-		}
-		const anim = setInterval(update, slowdown);
-
-		return () => {
-			clearInterval(anim);
-		}
+		return animationFrameEveryXms(500, (timestamp) => {
+			time = timestamp / 1000;
+		})
 	})
 </script>
 
