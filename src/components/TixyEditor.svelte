@@ -32,7 +32,7 @@
 			if(!animStart) animStart = timestamp;
 
 			const elapsed = timestamp - animStart;
-			time = elapsed / speed / 1000;
+			time = elapsed;
 
 			id = requestAnimationFrame(update);
 		}
@@ -75,7 +75,7 @@
 </style>
 
 <div class="wrapper">
-	<CanvasTixy {code} {n} {time} on:click={() => dispatch('clickTixy')}/>
+	<CanvasTixy {code} {n} {time} {speed} on:click={() => dispatch('clickTixy')}/>
 
 	<div class="input-wrapper">
 		{#each comments as comment}

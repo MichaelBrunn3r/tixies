@@ -39,13 +39,13 @@ export function getTixy(id: string): Tixy {
 }
 
 registerGallery('sweep_up', new Tixy('Sweep up', 'return sin(y/8+t);', 16))
-registerGallery('pulse', new Tixy('Pulse', 'return sin(t);', 16, 0.7))
-registerGallery('ripple_in', new Tixy('Ripple In', 'return sin(sqrt(pow(n/2-x-0.5,2)+pow(n/2-y-0.5,2))+t);', 16, 2))
-registerGallery('ripple_circ', new Tixy('Circular Ripple', 'let radius = n/4;return sin(sqrt(pow(n/2-x-0.5+sin(t)*radius,2)+pow(n/2-y-0.5+cos(t)*radius,2))+t);', 16, 0.5))
-registerGallery('triangle', new Tixy('Triangle', 'return y+1>x && n-2-y<x;', 16, 1))
-registerGallery('triangle-up', new Tixy('Flying Triangle', 'let h=t%n;return y>x-h && y>n-1-x-h && y<n-h;', 16, 1))
-registerGallery('grid', new Tixy('Grid', 'return x%4 && y%4', 16, 1))
-registerGallery('sirpinski', new Tixy('<a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle">Sirpinski </a>', 'return i & x & y & t*2', 16, 1))
+registerGallery('pulse', new Tixy('Pulse', 'return sin(t);', 16))
+registerGallery('ripple_in', new Tixy('Ripple In', 'return sin(sqrt(pow(n/2-x-0.5,2)+pow(n/2-y-0.5,2))+t);', 16))
+registerGallery('ripple_circ', new Tixy('Circular Ripple', 'let radius = n/4;return sin(sqrt(pow(n/2-x-0.5+sin(t)*radius,2)+pow(n/2-y-0.5+cos(t)*radius,2))+t);', 16))
+registerGallery('triangle', new Tixy('Triangle', 'return y+1>x && n-2-y<x;', 16))
+registerGallery('triangle-up', new Tixy('Flying Triangle', 'let h=t*3%n;return y>x-h && y>n-1-x-h && y<n-h;', 16))
+registerGallery('grid', new Tixy('Grid', 'return x%4 && y%4', 16))
+registerGallery('sirpinski', new Tixy('<a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle">Sirpinski </a>', 'return i & x & y & t*2', 16))
 
 registerTutorial('tut-start', new Tixy('', 'return sin(y/8+t);', 16, 1, ['Inspired by <a href="https://tixy.land">tixy.land</a>', 'Start the tutorial by clicking the dots']))
 registerTutorial('tut-visibility', new Tixy('', 'return i%3 == 0;', 16, 1, ['0/1 = false/true => hide/show dots']))

@@ -7,8 +7,8 @@
 	let time=0;
 
 	onMount(() => {
-		return animationFrameEveryXms(500, (timestamp) => {
-			time = timestamp / 1000;
+		return animationFrameEveryXms(33*4, (timestamp) => {
+			time = timestamp;
 		})
 	})
 </script>
@@ -58,7 +58,7 @@
 	{#each gallery as id}
 		<div class="tixy">
 			<a href="tixy/{id}">
-				<CanvasTixy code={getTixy(id).code} n={getTixy(id).n} {time} resolution={300}/>
+				<CanvasTixy code={getTixy(id).code} n={getTixy(id).n} {time} speed={getTixy(id).speed} resolution={300}/>
 			</a>
 			<label class="name-label">{@html getTixy(id).name}</label>
 		</div>

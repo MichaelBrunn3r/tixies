@@ -4,9 +4,12 @@
 	import { constrain } from '../utils/math';
 	import { Tixy } from '../data/tixies';
 
+	export let time: number;
+	export let speed: number;
+	$: adjustedTime = time/speed/1000;
+
 	export let code: string;
 	export let n: number;
-	export let time: number;
 	export let resolution = 1800;
 
 	$: radius = resolution / n / 2;
@@ -38,13 +41,9 @@
 	}
 
 	$: {
-		if(ctx) {
-			drawShapes(time, (ctx,x,y,s,c) => drawCircle(ctx,radius + x*diameter,radius + y*diameter,radius*s,c));
+			drawShapes(adjustedTime, (ctx,x,y,s,c) => drawCircle(ctx,radius + x*diameter,radius + y*diameter,radius*s,c));
 		}
 	}
-
-	// time, index, columnIdx, rowIdx
-	// const transi = (t,i,x,y) => Math.sin(t);
 
 	onMount(async () => {
 		ctx = canvas.getContext("2d");
