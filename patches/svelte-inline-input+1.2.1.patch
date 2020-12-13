@@ -1,0 +1,18 @@
+diff --git a/node_modules/svelte-inline-input/src/InlineInput.svelte b/node_modules/svelte-inline-input/src/InlineInput.svelte
+index ff3646b..e63fc31 100644
+--- a/node_modules/svelte-inline-input/src/InlineInput.svelte
++++ b/node_modules/svelte-inline-input/src/InlineInput.svelte
+@@ -101,11 +101,6 @@ const handleChange = (e) => {
+   <span
+     class={labelClasses}
+     on:click={toggle}>
+-    {label}
+-    <slot name="selectCaret">
+-      {#if isSelect}
+-        <span>&#9660;</span>
+-      {/if}
+-    </slot>
++    {label}<slot name="selectCaret">{#if isSelect}<span>&#9660;</span>{/if}</slot>
+   </span>
+ {/if}
+\ No newline at end of file
