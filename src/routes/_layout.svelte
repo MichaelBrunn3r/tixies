@@ -6,7 +6,7 @@
 	:global(body) {
 		--text-color-primary: gray;
 		--text-color-light: white;
-		--bg-color-primary: rgb(44, 44, 44);
+		--bg-color-primary: rgb(31, 30, 30);
 
 		font-family: monospace;
 		background-color: var(--bg-color-primary);
