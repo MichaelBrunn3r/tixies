@@ -6,12 +6,6 @@
 		margin-bottom: 8px;
 		column-gap: 8px;
 	}
-
-	a {
-		color: gray;
-		background: transparent;
-		border: transparent;
-	}
 </style>
 
 <div class="container">

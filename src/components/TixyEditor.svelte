@@ -35,11 +35,6 @@
 </script>
 
 <style lang="scss">
-	:global(body) {
-		font-family: monospace;
-		background-color: rgb(44, 44, 44);
-	}
-
 	.wrapper {
 		display: grid;
 		justify-items: center;
@@ -51,22 +46,21 @@
 	.input-wrapper {
 		width: 100%;
 		display: block;
-		color: white;
 		margin-top: 5vh;
 	}
 
-	.input {
+	.code-input {
 		width: 100%;
 		margin-left: 2em;
+	}
+
+	.code {
+		color: var(--text-color-light);
 	}
 
 	p {
 		padding: 0;
 		margin: 0;
-	}
-
-	.comment {
-		color: gray;
 	}
 </style>
 
@@ -75,12 +69,12 @@
 
 	<div class="input-wrapper">
 		{#each comments as comment}
-			<p class="comment">// {comment}</p>
+			<p class="comment" >// {@html comment}</p>
 		{/each}
 		<p class="comment">// time * <InlineInput type="number" bind:value={speed}/>, index, column, row, <InlineInput type="number" bind:value={n}/> circles
 		</p>
-		<p>(t,i,x,y,n) => &#123;</p>
-		<div class="input" contenteditable=true bind:textContent={code}></div>
-		<p>&#125;</p>
+		<p class="code">(t,i,x,y,n) => &#123;</p>
+		<div class="code-input code" contenteditable=true bind:textContent={code}></div>
+		<p class="code">&#125;</p>
 	</div>
 </div>

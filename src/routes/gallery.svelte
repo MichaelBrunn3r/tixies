@@ -23,11 +23,6 @@
 </svelte:head>
 
 <style lang="scss">
-	:global(body) {
-		font-family: monospace;
-		background-color: rgb(44, 44, 44);
-	}
-
 	.container {
 		width: 100%;
 		height: 100%;
@@ -45,7 +40,6 @@
 	}
 
 	.name-label {
-		color: gray;
 		text-align: center;
 	}
 
