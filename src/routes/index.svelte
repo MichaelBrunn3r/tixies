@@ -6,7 +6,7 @@
 	$: tixyId = tutorial[tutorialStage];
 
 	function advanceTutorial() {
-		tutorialStage = (tutorialStage+1)%tutorial.length
+		if(tutorialStage < tutorial.length) tutorialStage++;
 	}
 </script>
 

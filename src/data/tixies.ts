@@ -58,4 +58,4 @@ registerTutorial('tut-color', new Tixy('', 'return y-(n/2-0.5);', 16, 0, ['posit
 registerTutorial('tut-animate', new Tixy('', 'return y-t;', 16, 1, ['use \'t\' to animate values']))
 registerTutorial('tut-animate-faster', new Tixy('', 'return y-t*2;', 16, 1, ['multiply \'t\' to change the speed']))
 registerTutorial('tut-pattern', new Tixy('', 'return [0.25, -0.5, 0.75, -1][i%4]', 16, 0, ['Create patterns using arrays']))
-registerTutorial('tut-end', new Tixy('', 'return sin(t)', 16, 1, ['Have fun creating your own :)']))
+registerTutorial('tut-end', new Tixy('', 'return sin(t)', 16, 1, ['Edit the code to create your own', 'Have fun :)']))
