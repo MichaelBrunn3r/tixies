@@ -2,7 +2,6 @@
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { drawCircle } from '../utils/canvas';
 	import { constrain } from '../utils/math';
-	import { Tixy } from '../data/tixies';
 
 	export let time: number;
 	export let speed: number;
@@ -40,8 +39,13 @@
 		}
 	}
 
+	// Redraw if n or code changed
+	$: if(ctx && code) drawShapes(1,n);
+
+	// Redraw if adjustedTime changes
 	$: {
-			drawShapes(adjustedTime, (ctx,x,y,s,c) => drawCircle(ctx,radius + x*diameter,radius + y*diameter,radius*s,c));
+		if(ctx && speed != 0) {
+			drawShapes(adjustedTime, n);
 		}
 	}
 
@@ -54,13 +58,14 @@
 		ctx.clearRect(0,0,canvas.width,canvas.height);
 	}
 
-	function drawShapes(time: number, drawShape: (ctx: CanvasRenderingContext2D, x:number, y:number, scale:number, color:string) => any) {
+	function drawShapes(time: number, n: number) {
 		clear();
 
 		for(let y=0; y<n; y++) {
 			for(let x=0; x<n; x++) {
 				const scale = constrain(transform(time, y*n+x, x, y, n), -1, 1);
-				drawShape(ctx, x, y, Math.abs(scale), scale < 0 ? color1 : color2);
+				const color = scale < 0 ? color1 : color2;
+				drawCircle(ctx,radius + x*diameter,radius + y*diameter, radius*Math.abs(scale), color);
 			}
 		}
 	}
