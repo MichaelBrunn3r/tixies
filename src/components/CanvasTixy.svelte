@@ -25,7 +25,9 @@
 		try {
 			transform = new Function('t', 'i', 'x', 'y', 'n', `
 				try {
-					{${code}};
+					with(Math) {
+						${code}
+					};
 				} catch(e) {
 					return 0;
 				}
