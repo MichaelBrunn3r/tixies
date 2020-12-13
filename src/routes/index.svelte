@@ -1,12 +1,12 @@
 <script>
 	import TixyEditor from '../components/TixyEditor.svelte';
-	import { tixies } from '../data/tixies';
+	import { tutorial } from '../data/tixies';
 
-	let tixyId = 0;
-	$: tixy = Object.assign({},tixies[tixyId]);
+	let tutorialStage = 0;
+	$: tixyId = tutorial[tutorialStage];
 
-	function nextTixy() {
-		tixyId = (tixies+1)%tixies.length
+	function advanceTutorial() {
+		tutorialStage = (tutorialStage+1)%tutorial.length
 	}
 </script>
 
@@ -14,4 +14,4 @@
 	<title>Home</title>
 </svelte:head>
 
-<TixyEditor {tixy} />
+<TixyEditor {tixyId} on:clickTixy={advanceTutorial}/>
