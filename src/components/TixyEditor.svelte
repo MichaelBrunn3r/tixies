@@ -7,29 +7,39 @@
 	export let tixyId: string;
 	let dispatch = createEventDispatcher();
 
+	let animStart;
+	let time=0;
+
 	let n;
 	let speed;
 	let code;
 	let comments;
-	$: {
+	$: if(tixyId) reset();
+
+	function reset() {
 		const tixy = getTixy(tixyId);
 		n = tixy.n;
 		speed = tixy.speed;
 		code = tixy.code;
 		comments = tixy.comments;
+
+		animStart = undefined;
 	}
 
-	let time=0;
-
 	onMount(() => {
-		function update() {
-			requestAnimationFrame(update);
-			time = window.performance.now() / speed / 1000;
+		let id;
+		function update(timestamp) {
+			if(!animStart) animStart = timestamp;
+
+			const elapsed = timestamp - animStart;
+			time = elapsed / speed / 1000;
+
+			id = requestAnimationFrame(update);
 		}
-		const anim = requestAnimationFrame(update);
+		id = requestAnimationFrame(update);
 
 		return () => {
-			cancelAnimationFrame(anim);
+			cancelAnimationFrame(id);
 		}
 	})
 </script>
