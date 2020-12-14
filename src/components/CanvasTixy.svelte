@@ -5,7 +5,7 @@
 
 	export let time: number;
 	export let speed: number;
-	$: adjustedTime = time/speed/1000;
+	$: adjustedTime = time/10000*speed;
 
 	export let code: string;
 	export let n: number;
