@@ -10,42 +10,6 @@
 	<link rel="stylesheet" href="./global.css">
 	<link rel="icon" type="image/png" href="./favicon.png">
 
-	<script id="vertex-shader" type="x-shader/x-vertex">
-		attribute vec2 position;
-		void main() {
-			gl_Position = vec4(position, 0, 1);
-		}
-	</script>
-	<script id="fragment-shader" type="x-shader/x-fragment">
-		#ifdef GL_FRAGMENT_PRECISION_HIGH
-			precision highp float;
-		#else
-			precision mediump float;
-		#endif
-
-		uniform vec4 color;
-		uniform vec3 resolution;
-		uniform int n;
-		void main() {
-			vec2 normalizedCoord = gl_FragCoord.xy/resolution.xy;
-			normalizedCoord.y -= 1.0;
-
-			float radius = 1.0/float(n)/2.0;
-
-			for(int row=0;row>=0;row++) {
-				if(row > n-1) break;
-
-				float y = normalizedCoord.y + float(row)/float(n) + radius;
-				for(int column=0; column>=0; column++) {
-					if(column > n) break;
-
-					float x = normalizedCoord.x - float(column)/float(n) + radius;
-					gl_FragColor += vec4(1.0, 0.0, 0.0, 1.0) * smoothstep(radius, radius-0.003, sqrt(x*x + y*y));
-				}
-			}
-		}
-	</script>
-
 	<!-- Sapper creates a <script> tag containing `src/client.js`
 	     and anything else it needs to hydrate the app and
 	     initialise the router -->
