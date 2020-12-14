@@ -58,13 +58,13 @@
 </style>
 
 <div>
-	<button on:mousedown={() => handleMouseDown('backwards')} on:mouseup={cancelAdvancing} on:mouseleave={cancelAdvancing} ><i class="fas fa-backward"></i></button>
+	<button on:mousedown={() => handleMouseDown('backwards')} on:mouseup={cancelAdvancing} on:mouseleave={cancelAdvancing}>&lt;&lt;</button>
 	<button on:click={toggle}>
 		{#if playing}
-			<i class="fas fa-pause"></i>
+			||
 		{:else}
-			<i class="fas fa-play"></i>
+			►
 		{/if}
 	</button>
-	<button on:mousedown={() => handleMouseDown('forwards')} on:mouseup={cancelAdvancing} on:mouseleave={cancelAdvancing} ><i class="fas fa-forward"></i></button>
+	<button on:mousedown={() => handleMouseDown('forwards')} on:mouseup={cancelAdvancing} on:mouseleave={cancelAdvancing} >&gt;&gt;</button>
 </div>
