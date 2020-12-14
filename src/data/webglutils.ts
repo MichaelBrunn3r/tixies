@@ -36,6 +36,13 @@ export function createProgram(gl: WebGL2RenderingContext, vertexShaderSource: st
 	gl.attachShader(program, fragmentShader);
 	gl.linkProgram(program);
 
+	const success = gl.getProgramParameter(program, gl.LINK_STATUS);
+	if(!success) {
+		const info = gl.getProgramInfoLog(program);
+		gl.deleteProgram(program);
+		throw new Error(`Error while linking WebGL program: ${info}`);
+	}
+
 	return program;
 }
 
