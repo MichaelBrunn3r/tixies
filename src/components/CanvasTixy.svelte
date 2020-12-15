@@ -11,7 +11,7 @@
 	export let resolution = 800;
 
 	$: if(gl && n) {
-		populateCenterPositions(gl);
+		updateStaticInstanceData(gl, n);
 		render();
 	}
 
@@ -21,17 +21,18 @@
 	let gl: WebGL2RenderingContext;
 	let program: WebGLProgram;
 
+	// Shader attributes
 	let positionLoc;
-	let positionBuffer;
 	let resolutionLoc;
-
 	let centerLoc;
-	let centerBuffer;
-	let centerPositions;
-
 	let radiusLoc;
 
-	onMount(async () => {
+	let positionBuffer;
+	let centerBuffer;
+	let centerPositions;
+	let commonGeometry: Array<number>;
+
+	function initShaders() {
 		gl = canvas.getContext("webgl2");
 		program = webglutils.createProgramFromSources(gl,`
 			uniform vec2 u_resolution;
@@ -45,7 +46,7 @@
 			varying float v_radius;
 
 			void main() {
-				vec2 pos = (a_position + a_center + vec2(-a_radius,-a_radius)) * vec2(2,-2) + vec2(-1,1);
+				vec2 pos = (a_position + a_center + vec2(-a_radius, -a_radius)) * vec2(2,-2) + vec2(-1,1);
 				gl_Position = vec4(pos,0,1);
 
 				v_resolution = u_resolution;
@@ -76,59 +77,61 @@
 
 		centerLoc = gl.getAttribLocation(program, 'a_center');
 		centerBuffer = gl.createBuffer();
-		populateCenterPositions(gl);
 
 		positionLoc = gl.getAttribLocation(program, 'a_position');
 		positionBuffer = gl.createBuffer();
 
 		gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
+	}
 
-		render();
-	})
+	function updateStaticInstanceData(gl: WebGL2RenderingContext, numInstances: number) {
+		// Update geometry based on the number of instances
+		commonGeometry = webglutils.rectangle(0,0,1/numInstances,1/numInstances);
+		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(commonGeometry), gl.STATIC_DRAW);
+
+		// Update resolution
+		gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
+
+		// Update radius based on the number of instances
+		gl.vertexAttrib1f(radiusLoc, 1/numInstances/2);
+
+		// Update circle center positions based on the number of instances
+		centerPositions = [];
+		for(let y=0; y<numInstances; y++) {
+			for(let x=0; x<numInstances; x++) {
+				centerPositions.push((x+.5)/numInstances, (y+.5)/numInstances);
+			}
+		}
+		gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(centerPositions), gl.STATIC_DRAW);
+	}
 
 	function render() {
 		gl.useProgram(program);
 		webglutils.clear(gl);
 
-		drawCircles();
-	}
-
-	function drawCircles() {
-		gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
-
-		gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
-		gl.enableVertexAttribArray(centerLoc);
-		gl.vertexAttribPointer(centerLoc, 2, gl.FLOAT, false, 0, 0);
-		gl.vertexAttribDivisor(centerLoc, 1);
-
-		let circleGeometry = webglutils.rectangle(0,0,1/n,1/n);
-		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(circleGeometry), gl.STATIC_DRAW);
-		webglutils.pointVertexAttrib(gl, positionLoc,  2);
-
-		gl.vertexAttrib1f(radiusLoc, 1/n/2);
-
 		gl.drawArraysInstanced(
 			gl.TRIANGLES,
 			0,
-			6,
+			commonGeometry.length/2,
 			n*n
 		);
 	}
 
-	function populateCenterPositions(gl: WebGL2RenderingContext) {
-		centerPositions = [];
-		for(let y=0; y<n; y++) {
-			for(let x=0; x<n; x++) {
-				centerPositions.push((x+.5)/n, (y+.5)/n);
-			}
-		}
-
-		console.log(centerPositions);
+	onMount(async () => {
+		initShaders();
+		updateStaticInstanceData(gl, n);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(centerPositions), gl.STATIC_DRAW);
-	}
+		webglutils.pointVertexAttrib(gl, centerLoc, 2);
+		gl.vertexAttribDivisor(centerLoc, 1);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+		webglutils.pointVertexAttrib(gl, positionLoc,  2);
+
+		render();
+	})
 </script>
 
 <style lang="scss">
