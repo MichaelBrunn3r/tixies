@@ -63,8 +63,6 @@
 	function backwards(e) {
 		elapsed -= e.detail;
 		time = elapsed;
-		console.log("backwards");
-
 	}
 </script>
 
