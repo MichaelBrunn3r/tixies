@@ -25,8 +25,8 @@
 		display: grid;
 		justify-content: center;
 		column-gap: 10px;
-		grid-auto-columns: 1fr;
-		grid-auto-flow: column;
+		grid-template-columns: repeat(5, 1fr);
+		grid-auto-flow: rows;
 	}
 
 	.tixy {
@@ -49,6 +49,13 @@
 	@media (min-width: 550px) and (max-width: 800px) {
 		.container {
 			grid-template-columns: repeat(3, 1fr);
+			grid-auto-flow: unset;
+		}
+	}
+
+	@media (min-width: 800px) and (max-width: 1000px) {
+		.container {
+			grid-template-columns: repeat(4, 1fr);
 			grid-auto-flow: unset;
 		}
 	}
