@@ -10,7 +10,10 @@
 	export let n: number;
 	export let resolution = 800;
 
-	$: if(gl && n) render();
+	$: if(gl && n) {
+		populateCenterPositions(gl);
+		render();
+	}
 
 	let dispatch = createEventDispatcher();
 
@@ -21,7 +24,11 @@
 	let positionLoc;
 	let positionBuffer;
 	let resolutionLoc;
+
 	let centerLoc;
+	let centerBuffer;
+	let centerPositions;
+
 	let radiusLoc;
 
 	onMount(async () => {
@@ -31,13 +38,14 @@
 			attribute vec2 a_position;
 			attribute vec2 a_center;
 			attribute float a_radius;
+			attribute float a_xoffset;
 
 			varying vec2 v_resolution;
 			varying vec2 v_center;
 			varying float v_radius;
 
 			void main() {
-				vec2 pos = a_position * vec2(2,-2) + vec2(-1,1);
+				vec2 pos = (a_position + a_center + vec2(-a_radius,-a_radius)) * vec2(2,-2) + vec2(-1,1);
 				gl_Position = vec4(pos,0,1);
 
 				v_resolution = u_resolution;
@@ -64,13 +72,14 @@
 		`);
 
 		resolutionLoc = gl.getUniformLocation(program, 'u_resolution');
-		positionLoc = gl.getAttribLocation(program, 'a_position');
-		centerLoc = gl.getAttribLocation(program, 'a_center');
 		radiusLoc = gl.getAttribLocation(program, 'a_radius');
 
+		centerLoc = gl.getAttribLocation(program, 'a_center');
+		centerBuffer = gl.createBuffer();
+		populateCenterPositions(gl);
 
+		positionLoc = gl.getAttribLocation(program, 'a_position');
 		positionBuffer = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
 		gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
 
@@ -81,25 +90,44 @@
 		gl.useProgram(program);
 		webglutils.clear(gl);
 
-		for(let y=0; y<n; y++) {
-			for(let x=0; x<n; x++) {
-				drawCircle((.5+x)/n,(.5+y)/n,1/n/2);
-			}
-		}
+		drawCircles();
 	}
 
-	function drawCircle(cx: number, cy: number, radius: number) {
+	function drawCircles() {
 		gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
 
-		gl.vertexAttrib2f(centerLoc, cx, cy);
-		gl.vertexAttrib1f(radiusLoc, radius);
+		gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
+		gl.enableVertexAttribArray(centerLoc);
+		gl.vertexAttribPointer(centerLoc, 2, gl.FLOAT, false, 0, 0);
+		gl.vertexAttribDivisor(centerLoc, 1);
 
-		let vertices = webglutils.rectangle(cx-radius,cy-radius,cx+radius,cy+radius);
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+		let circleGeometry = webglutils.rectangle(0,0,1/n,1/n);
 		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(circleGeometry), gl.STATIC_DRAW);
 		webglutils.pointVertexAttrib(gl, positionLoc,  2);
 
-		gl.drawArrays(gl.TRIANGLES, 0, 6);
+		gl.vertexAttrib1f(radiusLoc, 1/n/2);
+
+		gl.drawArraysInstanced(
+			gl.TRIANGLES,
+			0,
+			6,
+			n*n
+		);
+	}
+
+	function populateCenterPositions(gl: WebGL2RenderingContext) {
+		centerPositions = [];
+		for(let y=0; y<n; y++) {
+			for(let x=0; x<n; x++) {
+				centerPositions.push((x+.5)/n, (y+.5)/n);
+			}
+		}
+
+		console.log(centerPositions);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(centerPositions), gl.STATIC_DRAW);
 	}
 </script>
 
