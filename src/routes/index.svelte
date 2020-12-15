@@ -3,7 +3,7 @@
 	import tixies from '../data/tixies';
 
 	let tutorialStage = 0;
-	$: tixyId = tutorial[tutorialStage];
+	$: tixyId = tixies.tutorial[tutorialStage];
 
 	function advanceTutorial() {
 		if(tutorialStage < tixies.tutorial.length) tutorialStage++;

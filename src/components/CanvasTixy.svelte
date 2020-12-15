@@ -7,7 +7,7 @@
 
 	export let time: number;
 	export let speed: number;
-	$: adjustedTime = time/10000*speed;
+	$: adjustedTime = tixies.adjustTime(time, speed);
 
 	// Redraw if adjustedTime changes
 	$: {

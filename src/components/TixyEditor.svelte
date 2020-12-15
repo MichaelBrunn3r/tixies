@@ -117,8 +117,8 @@
 <div class="wrapper">
 	<CanvasTixy {code} {n} {time} {speed} on:click={() => dispatch('clickTixy')}/>
 	<div class="control-wrapper">
+		<span>Time: {Math.round(tixies.adjustTime(time,speed))}</span>
 		<MediaControls bind:playing={animationPlaying} on:toggle={toggleAnimation} on:forwards={forwards} on:backwards={backwards}/>
-
 		<div class="param-control-wrapper">
 			<div>Speed:<InlineInput type="number" bind:value={speed}/>,</div>
 			<div>Dots:<InlineInput type="number" bind:value={n}/></div>
