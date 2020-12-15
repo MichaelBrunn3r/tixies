@@ -84,6 +84,22 @@ export function createProgramFromScripts(gl: WebGL2RenderingContext, vertexShade
 	return createProgram(gl, createShaderFromScript(gl, vertexShaderScriptID), createShaderFromScript(gl, fragmentShaderScriptID));
 }
 
+export function* getActiveAttributes(gl: WebGL2RenderingContext, program: WebGLProgram) {
+	const numAttribs = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES);
+	for(let i=0; i<numAttribs; i++) {
+		const attribInfo = gl.getActiveAttrib(program, i);
+		if(!attribInfo) {
+			break;
+		}
+		yield attribInfo;
+	}
+}
+
+export function pointVertexAttrib(gl: WebGL2RenderingContext, attribLoc: number, size: number, type: number=WebGL2RenderingContext.FLOAT, normalized: boolean=false, stride: number=0, offset: number=0) {
+	gl.enableVertexAttribArray(attribLoc);
+	gl.vertexAttribPointer(attribLoc, size, type, normalized, stride, offset);
+}
+
 export function clear(gl: WebGL2RenderingContext, r=0, g=0, b=0, a=0) {
 	gl.clearColor(r,g,b,a);
 	gl.clear(gl.COLOR_BUFFER_BIT);
@@ -101,6 +117,14 @@ export function rectangle(x1: number, y1: number, x2: number, y2: number) {
 	]
 }
 
+/**
+ * Convert a coordinate in clip space (-1..1) to color space (0..1)
+ * @param coord The coordiante to convert
+ */
+export function glsl_clipSpaceToColorSpace(coord: string) {
+	return `${coord} * .5 + .5`
+}
+
 export default {
 	createShaderFromSource,
 	createShaderFromScript,
@@ -108,6 +132,9 @@ export default {
 	createProgram,
 	createProgramFromSources,
 	createProgramFromScripts,
+
+	getActiveAttributes,
+	pointVertexAttrib,
 
 	clear,
 	rectangle
