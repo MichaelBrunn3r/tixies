@@ -2,7 +2,7 @@
 	import CanvasTixy from '../components/CanvasTixy.svelte';
 	import { gallery, getTixy } from '../data/tixies';
 	import { onMount } from 'svelte';
-	import { animationFrameEveryXms } from '../data/animation';
+	import { animationFrameEveryXms } from '../utils/animation';
 
 	let time=0;
 
