@@ -1,12 +1,12 @@
 <script>
 	import TixyEditor from '../components/TixyEditor.svelte';
-	import { tutorial } from '../data/tixies';
+	import tixies from '../data/tixies';
 
 	let tutorialStage = 0;
 	$: tixyId = tutorial[tutorialStage];
 
 	function advanceTutorial() {
-		if(tutorialStage < tutorial.length) tutorialStage++;
+		if(tutorialStage < tixies.tutorial.length) tutorialStage++;
 	}
 </script>
 

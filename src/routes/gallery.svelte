@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CanvasTixy from '../components/CanvasTixy.svelte';
-	import { gallery, getTixy } from '../data/tixies';
+	import tixies from '../data/tixies';
 	import { onMount } from 'svelte';
 	import { animationFrameEveryXms } from '../utils/animation';
 
@@ -62,12 +62,12 @@
 </style>
 
 <div class="container">
-	{#each gallery as id}
+	{#each tixies.gallery as id}
 		<div class="tixy">
 			<a href="tixy/{id}">
-				<CanvasTixy code={getTixy(id).code} n={getTixy(id).n} {time} speed={getTixy(id).speed} resolution={300}/>
+				<CanvasTixy code={tixies.get(id).code} n={tixies.get(id).n} {time} speed={tixies.get(id).speed} resolution={300}/>
 			</a>
-			<label class="name-label">{@html getTixy(id).name}</label>
+			<label class="name-label">{@html tixies.get(id).name}</label>
 		</div>
 	{/each}
 </div>

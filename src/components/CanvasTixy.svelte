@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher } from 'svelte';
 	import webglutils from '../utils/webgl';
-	import { createTransformFunction } from '../data/tixies';
+	import tixies from '../data/tixies';
 	import shaders from '../data/shaders';
 	import { constrain } from '../utils/math';
 
@@ -33,7 +33,7 @@
 
 	let transform;
 	$: if(code) {
-		transform = createTransformFunction(code);
+		transform = tixies.createTransformFunction(code);
 	}
 	$: if(gl && transform) {
 		render();

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CanvasTixy from '../components/CanvasTixy.svelte';
 	import InlineInput from 'svelte-inline-input';
-	import { getTixy } from '../data/tixies';
+	import tixies from '../data/tixies';
 	import { onMount, createEventDispatcher } from 'svelte';
 	import MediaControls from './MediaControls.svelte';
 
@@ -20,7 +20,7 @@
 	$: if(tixyId) reset();
 
 	function reset() {
-		const tixy = getTixy(tixyId);
+		const tixy = tixies.get(tixyId);
 		n = tixy.n;
 		speed = tixy.speed;
 		code = tixy.code;

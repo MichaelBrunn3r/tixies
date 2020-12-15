@@ -20,9 +20,9 @@ const tixies = {
 }
 
 
-export const gallery = [];
+const gallery = [];
 
-export const tutorial = []
+const tutorial = []
 
 function registerGallery(id:string, tixy: Tixy) {
 	tixies[id] = tixy;
@@ -34,11 +34,11 @@ function registerTutorial(id:string, tixy: Tixy) {
 	tutorial.push(id)
 }
 
-export function getTixy(id: string): Tixy {
+function get(id: string): Tixy {
 	return tixies[id];
 }
 
-export function createTransformFunction(code: string) {
+function createTransformFunction(code: string) {
 	try {
 		return new Function('t', 'i', 'x', 'y', 'n', `
 			try {
@@ -52,6 +52,10 @@ export function createTransformFunction(code: string) {
 	} catch(e) {
 		return () => 1;
 	}
+}
+
+function adjustTime(time: number, speed: number) {
+	return time/10000*speed;
 }
 
 registerGallery('sweep_up', new Tixy('Sweep up', 'return sin(y/8+t);', 16))
@@ -78,3 +82,11 @@ registerTutorial('tut-animate', new Tixy('', 'return y-t;', 16, 10, ['use \'t\' 
 registerTutorial('tut-animate-faster', new Tixy('', 'return y-t*2;', 16, 10, ['multiply \'t\' to change the speed']))
 registerTutorial('tut-pattern', new Tixy('', 'return [0.25, -0.5, 0.75, -1][i%4]', 16, 0, ['Create patterns using arrays']))
 registerTutorial('tut-end', new Tixy('', 'return sin(t)', 16, 10, ['Edit the code to create your own', 'Have fun :)']))
+
+export default {
+	get,
+	gallery,
+	tutorial,
+	adjustTime,
+	createTransformFunction
+}
