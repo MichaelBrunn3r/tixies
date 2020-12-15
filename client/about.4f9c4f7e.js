@@ -1,1 +1,0 @@
-import{S as t,i as s,s as e,q as a,d as o,F as i}from"./client.bfebb284.js";function n(t){return{c(){this.h()},l(t){a('[data-svelte="svelte-1ine71f"]',document.head).forEach(o),this.h()},h(){document.title="About"},m:i,p:i,i:i,o:i,d:i}}export default class extends t{constructor(t){super(),s(this,t,null,n,e,{})}}
