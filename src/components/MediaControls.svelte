@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ToggleButton from './ToggleButton.svelte'
+	import PressButton from './PressButton.svelte'
 	import { createEventDispatcher } from 'svelte';
 
 	export let playing;
@@ -7,30 +8,22 @@
 
 	let dispatch = createEventDispatcher();
 
-	let pressedBtn;
-	let tickId;
-	let tickStart;
-	function handleMouseDown(btn: string) {
-		if(tickId) clearInterval(tickId)
+	let direction;
 
+	function startWinding(dir: string) {
 		playing = false;
-		pressedBtn = btn;
-		tickStart = window.performance.now();
-
-		tickId = setInterval(() => {
-			let elapsed = window.performance.now() - tickStart;
-			let intensity = 1;
-			if(elapsed > 10) {
-				intensity = Math.min(100,Math.pow(2, elapsed/200));
-			}
-			dispatch(pressedBtn, intensity);
-		}, 10)
+		direction = dir;
 	}
 
-	function cancelAdvancing() {
-		clearInterval(tickId)
-		tickId = undefined;
-		pressedBtn = undefined;
+	function handleTick(e) {
+		const elapsed = e.detail.elapsed;
+
+		let intensity = 1;
+		if(elapsed > 10) {
+			intensity = Math.min(100,Math.pow(2, elapsed/200));
+		}
+
+		dispatch(direction, intensity);
 	}
 </script>
 
@@ -44,10 +37,14 @@
 </style>
 
 <div>
-	<button on:mousedown={() => handleMouseDown('backwards')} on:mouseup={cancelAdvancing} on:mouseleave={cancelAdvancing}>&lt;&lt;</button>
+	<PressButton on:pressStart={() => startWinding('backwards')} on:tick={handleTick}>
+		&lt;&lt;
+	</PressButton>
 	<ToggleButton bind:isOn={playing}>
 		<span slot="on">||</span>
 		<span slot="off">►</span>
 	</ToggleButton>
-	<button on:mousedown={() => handleMouseDown('forwards')} on:mouseup={cancelAdvancing} on:mouseleave={cancelAdvancing} >&gt;&gt;</button>
+	<PressButton  on:pressStart={() => startWinding('forwards')} on:tick={handleTick}>
+		&gt;&gt;
+	</PressButton>
 </div>
