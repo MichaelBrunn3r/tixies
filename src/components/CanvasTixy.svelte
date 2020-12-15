@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher } from 'svelte';
-	import webglutils from '../data/webglutils';
+	import webglutils from '../utils/webgl';
 	import { createTransformFunction } from '../data/tixies';
 	import { constrain } from '../utils/math';
 
