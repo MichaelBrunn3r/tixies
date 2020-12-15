@@ -1,10 +1,19 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher } from 'svelte';
-	import webglutils, { glsl_clipSpaceToColorSpace } from '../data/webglutils';
+	import webglutils from '../data/webglutils';
+	import { createTransformFunction } from '../data/tixies';
+	import { constrain } from '../utils/math';
 
 	export let time: number;
 	export let speed: number;
 	$: adjustedTime = time/speed/1000;
+
+	// Redraw if adjustedTime changes
+	$: {
+		if(gl && speed != 0 && adjustedTime) {
+			render();
+		}
+	}
 
 	export let code: string;
 	export let n: number;
@@ -21,14 +30,26 @@
 	let gl: WebGL2RenderingContext;
 	let program: WebGLProgram;
 
+	let transform;
+	$: if(code) {
+		transform = createTransformFunction(code);
+	}
+	$: if(gl && transform) {
+		render();
+	}
+
+
 	// Shader attributes
 	let positionLoc;
 	let resolutionLoc;
 	let centerLoc;
 	let radiusLoc;
+	let transformLoc;
 
 	let positionBuffer;
 	let centerBuffer;
+	let transformBuffer;
+
 	let centerPositions;
 	let commonGeometry: Array<number>;
 
@@ -39,11 +60,12 @@
 			attribute vec2 a_position;
 			attribute vec2 a_center;
 			attribute float a_radius;
-			attribute float a_xoffset;
+			attribute float a_transform;
 
 			varying vec2 v_resolution;
 			varying vec2 v_center;
 			varying float v_radius;
+			varying float v_transform;
 
 			void main() {
 				vec2 pos = (a_position + a_center + vec2(-a_radius, -a_radius)) * vec2(2,-2) + vec2(-1,1);
@@ -52,6 +74,7 @@
 				v_resolution = u_resolution;
 				v_center = a_center;
 				v_radius = a_radius;
+				v_transform = a_transform;
 			}
 		`, `
 			precision mediump float;
@@ -59,6 +82,7 @@
 			varying vec2 v_resolution;
 			varying vec2 v_center;
 			varying float v_radius;
+			varying float v_transform;
 
 			void main() {
 				vec2 normalizedCoord = gl_FragCoord.xy/v_resolution * vec2(1,-1) + vec2(0,+1);
@@ -67,8 +91,10 @@
 				float dy = v_center[1] - normalizedCoord.y;
 
 				float distance = sqrt(dx*dx + dy*dy);
+				float radius = v_radius * abs(v_transform);
+				vec4 color = v_transform < .0 ? vec4(1,0,0,1) : vec4(1,1,1,1);
 
-				gl_FragColor += vec4(1,0,0,1) * smoothstep(v_radius, v_radius-0.003, distance);
+				gl_FragColor += color * smoothstep(radius, radius-0.003, distance);
 			}
 		`);
 
@@ -80,6 +106,9 @@
 
 		positionLoc = gl.getAttribLocation(program, 'a_position');
 		positionBuffer = gl.createBuffer();
+
+		transformLoc = gl.getAttribLocation(program, 'a_transform');
+		transformBuffer = gl.createBuffer();
 
 		gl.viewport(0,0,gl.canvas.width,gl.canvas.height);
 	}
@@ -107,9 +136,26 @@
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(centerPositions), gl.STATIC_DRAW);
 	}
 
+	function updateTransforms() {
+		let transforms = [];
+		for(let y=0; y<n; y++) {
+			for(let x=0; x<n; x++) {
+				transforms.push(constrain(transform(adjustedTime, x+y*n, x, y, n), -1, 1));
+			}
+		}
+		gl.bindBuffer(gl.ARRAY_BUFFER, transformBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(transforms), gl.STATIC_DRAW);
+	}
+
 	function render() {
 		gl.useProgram(program);
 		webglutils.clear(gl);
+
+		updateTransforms();
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, transformBuffer);
+		webglutils.pointVertexAttrib(gl, transformLoc, 1);
+		gl.vertexAttribDivisor(transformLoc, 1);
 
 		gl.drawArraysInstanced(
 			gl.TRIANGLES,

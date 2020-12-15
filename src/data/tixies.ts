@@ -38,6 +38,22 @@ export function getTixy(id: string): Tixy {
 	return tixies[id];
 }
 
+export function createTransformFunction(code: string) {
+	try {
+		return new Function('t', 'i', 'x', 'y', 'n', `
+			try {
+				with(Math) {
+					${code}
+				};
+			} catch(e) {
+				return 0;
+			}
+		`);
+	} catch(e) {
+		return () => 1;
+	}
+}
+
 registerGallery('sweep_up', new Tixy('Sweep up', 'return sin(y/8+t);', 16))
 registerGallery('pulse', new Tixy('Pulse', 'return sin(t);', 16))
 registerGallery('ripple_in', new Tixy('Ripple In', 'return sin(sqrt(pow(n/2-x-0.5,2)+pow(n/2-y-0.5,2))+t);', 16))
