@@ -15,10 +15,7 @@ export class Tixy {
 }
 
 const tixies = {
-
-
 }
-
 
 const gallery = [];
 
@@ -54,8 +51,9 @@ function createTransformFunction(code: string) {
 	}
 }
 
-function adjustTime(time: number, speed: number) {
-	return time/10000*speed;
+const frameAdjustmentFactor = 1000;
+function adjustFrame(frame: number, speed: number) {
+	return frame/frameAdjustmentFactor*speed;
 }
 
 registerGallery('sweep_up', new Tixy('Sweep up', 'return sin(y/8+t);', 16))
@@ -87,6 +85,7 @@ export default {
 	get,
 	gallery,
 	tutorial,
-	adjustTime,
-	createTransformFunction
+	createTransformFunction,
+	adjustFrame,
+	frameAdjustmentFactor
 }

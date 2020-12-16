@@ -5,13 +5,13 @@
 	import shaders from '../data/shaders';
 	import { constrain } from '../utils/math';
 
-	export let time: number;
+	export let frame: number;
 	export let speed: number;
-	$: adjustedTime = tixies.adjustTime(time, speed);
+	$: adjustedFrame = tixies.adjustFrame(frame, speed);
 
 	// Redraw if adjustedTime changes
 	$: {
-		if(gl && speed != 0 && adjustedTime) {
+		if(gl && speed != 0 && adjustedFrame) {
 			render();
 		}
 	}
@@ -100,7 +100,7 @@
 		let transforms = [];
 		for(let y=0; y<n; y++) {
 			for(let x=0; x<n; x++) {
-				transforms.push(constrain(transform(adjustedTime, x+y*n, x, y, n), -1, 1));
+				transforms.push(constrain(transform(adjustedFrame, x+y*n, x, y, n), -1, 1));
 			}
 		}
 		gl.bindBuffer(gl.ARRAY_BUFFER, transformBuffer);

@@ -9,9 +9,7 @@
 	let dispatch = createEventDispatcher();
 
 	let animationPlaying = true;
-	let animStart;
-	let time=0;
-	let elapsed=0;
+	let frame=0;
 
 	let n;
 	let speed;
@@ -25,9 +23,6 @@
 		speed = tixy.speed;
 		code = tixy.code;
 		comments = tixy.comments;
-
-		animStart = undefined;
-		elapsed=0;
 		animationPlaying = true;
 	}
 
@@ -35,11 +30,8 @@
 		let id;
 		function update(timestamp) {
 			if(animationPlaying) {
-				if(!animStart) animStart = timestamp;
-				elapsed = timestamp - animStart;
-				time = elapsed;
+				frame++;
 			}
-
 			id = requestAnimationFrame(update);
 		}
 		id = requestAnimationFrame(update);
@@ -49,20 +41,12 @@
 		}
 	})
 
-	function toggleAnimation() {
-		if(animationPlaying) {
-			animStart = window.performance.now() - elapsed;
-		}
-	}
-
 	function forwards(e) {
-		elapsed += e.detail;
-		time = elapsed;
+		frame += e.detail;
 	}
 
 	function backwards(e) {
-		elapsed -= e.detail;
-		time = elapsed;
+		frame -= e.detail;
 	}
 </script>
 
@@ -115,10 +99,12 @@
 </style>
 
 <div class="wrapper">
-	<CanvasTixy {code} {n} {time} {speed} on:click={() => dispatch('clickTixy')}/>
+	<CanvasTixy {code} {n} {frame} {speed} on:click={() => dispatch('clickTixy')}/>
 	<div class="control-wrapper">
-		<span>Time: {Math.round(tixies.adjustTime(time,speed))}</span>
-		<MediaControls bind:playing={animationPlaying} on:toggle={toggleAnimation} on:forwards={forwards} on:backwards={backwards}/>
+		<div class="param-control-wrapper">
+			Frame:<InlineNumberInput bind:value={frame} step={10} shiftStep={100} altStep={1}></InlineNumberInput>
+		</div>
+		<MediaControls bind:playing={animationPlaying} on:forwards={forwards} on:backwards={backwards}/>
 		<div class="param-control-wrapper">
 			Speed:<InlineNumberInput bind:value={speed} shiftStep={10}></InlineNumberInput>
 			, Dots:<InlineNumberInput bind:value={n} shiftStep={10}></InlineNumberInput>

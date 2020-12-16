@@ -4,11 +4,11 @@
 	import { onMount } from 'svelte';
 	import { animationFrameEveryXms } from '../utils/animation';
 
-	let time=0;
+	let frame=0;
 
 	onMount(() => {
-		return animationFrameEveryXms(33*4, (timestamp) => {
-			time = timestamp;
+		return animationFrameEveryXms(33*4, () => {
+			frame += 8;
 		})
 	})
 </script>
@@ -65,7 +65,7 @@
 	{#each tixies.gallery as id}
 		<div class="tixy">
 			<a href="tixy/{id}">
-				<CanvasTixy code={tixies.get(id).code} n={tixies.get(id).n} {time} speed={tixies.get(id).speed} resolution={300}/>
+				<CanvasTixy code={tixies.get(id).code} n={tixies.get(id).n} {frame} speed={tixies.get(id).speed} resolution={300}/>
 			</a>
 			<label class="name-label">{@html tixies.get(id).name}</label>
 		</div>
