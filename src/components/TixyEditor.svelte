@@ -8,14 +8,18 @@
 	export let tixyId: string;
 	let dispatch = createEventDispatcher();
 
-	let animationPlaying = true;
+	// Tixy parameters
 	let frame=0;
-
 	let n;
 	let speed;
 	let code;
 	let comments;
+
+	let animationPlaying = true;
+	let hasErrorInCode;
+
 	$: if(tixyId) reset();
+	$: animationPlaying = !hasErrorInCode;
 
 	function reset() {
 		const tixy = tixies.get(tixyId);
@@ -71,6 +75,8 @@
 		overflow-wrap: normal;
 	}
 
+	div.error {
+		border: 1px solid red;
 	}
 
 	.code {
@@ -102,7 +108,7 @@
 </style>
 
 <div class="wrapper">
-	<CanvasTixy {code} {n} {frame} {speed} on:click={() => dispatch('clickTixy')}/>
+	<CanvasTixy {code} {n} {frame} {speed} bind:hasErrorInCode on:click={() => dispatch('clickTixy')}/>
 	<div class="control-wrapper">
 		<div class="param-control-wrapper">
 			Frame:<InlineNumberInput bind:value={frame} step={10} shiftStep={100} altStep={1}></InlineNumberInput>
@@ -118,8 +124,10 @@
 		{#each comments as comment}
 			<p class="comment" >// {@html comment}</p>
 		{/each}
-		<p class="code">(t,i,x,y,n) => &#123;</p>
-		<div class="code-input code" contenteditable=true bind:textContent={code}></div>
-		<p class="code">&#125;</p>
+		<div class:error={hasErrorInCode}>
+			<p class="code">(t,i,x,y,n) => &#123;</p>
+			<div class="code-input code" contenteditable=true bind:textContent={code}></div>
+			<p class="code">&#125;</p>
+		</div>
 	</div>
 </div>

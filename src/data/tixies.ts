@@ -38,19 +38,27 @@ function get(id: string): Tixy {
 }
 
 function createTransformFunction(code: string) {
+	let fn;
+	let error = false;
+
 	try {
-		return new Function('t', 'i', 'x', 'y', 'n', `
-			try {
-				with(Math) {
-					${code}
-				};
-			} catch(e) {
-				return 0;
-			}
-		`);
+		fn = new Function('t', 'i', 'x', 'y', 'n', `
+				try {
+					with(Math) {
+						${code}
+					};
+				} catch(e) {
+					return 0;
+				}
+			`)
 	} catch(e) {
-		return () => 1;
+		error = true;
 	}
+
+	return [
+		fn ? fn : () => 1,
+		error
+	]
 }
 
 const frameAdjustmentFactor = 10000;

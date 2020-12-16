@@ -7,6 +7,7 @@
 
 	export let frame: number;
 	export let speed: number;
+	export let hasErrorInCode = false;
 	$: adjustedFrame = tixies.adjustFrame(frame, speed);
 
 	// Redraw if adjustedTime changes
@@ -33,7 +34,7 @@
 
 	let transform;
 	$: if(code) {
-		transform = tixies.createTransformFunction(code);
+		[transform, hasErrorInCode] = tixies.createTransformFunction(code);
 	}
 	$: if(gl && transform) {
 		render();
