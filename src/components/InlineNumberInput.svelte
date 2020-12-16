@@ -5,15 +5,14 @@
 
 	export let value = 0;
 	export let defaultVal = 0;
-	export let min = 0;
-	export let max = "any";
+	export let min = -10;
+	export let max = 10;
 	export let step = 1;
 	export let altStep: number = null;
 	export let shiftStep: number = null;
 
 	let inputElem: HTMLDivElement;
 	let caretBeforeInput;
-	let valBeforeInput;
 
 	$: if(inputElem) inputElem.textContent = "" + value
 	$: console.log(value);
@@ -27,7 +26,10 @@
 		if(altStep != null && e.altKey) amount = altStep;
 		if(shiftStep != null && e.shiftKey) amount = shiftStep;
 
-		value = value + Math.sign(e.deltaY*-1) * amount;
+		let newVal = value + Math.sign(e.deltaY*-1) * amount;
+		if(min) newVal = Math.max(min, newVal);
+		if(max) newVal = Math.min(max, newVal);
+		value = newVal;
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
@@ -37,10 +39,8 @@
 			return;
 		}
 
-		// Save information for resets
+		// Save caret position for resets
 		caretBeforeInput = getCaretCharacterOffsetWithin(inputElem);
-		valBeforeInput = inputElem.textContent;
-
 	}
 
 	async function handleInput(e) {
@@ -56,7 +56,7 @@
 			// Set val to default if string is empty
 			newVal = defaultVal;
 			caret = 1;
-		} else if(parseFloat(newTextVal) && newTextVal.startsWith('0')) {
+		} else if(newTextVal.startsWith('0')) {
 			// Remove leading 0s
 			const stripped = newTextVal.replace(/\D|^0+/g, "");
 			const diff = newTextVal.length - stripped.length;
@@ -65,10 +65,12 @@
 		}
 
 		// Update value
+		if(min) newVal = Math.max(min, newVal);
+		if(max) newVal = Math.min(max, newVal);
 		value = newVal;
 
 		// Update display
-		inputElem.textContent = "" + newVal;
+		inputElem.textContent = "" + value;
 		await tick();
 		setCaret(inputElem, caret);
 	}
