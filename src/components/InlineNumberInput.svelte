@@ -44,34 +44,30 @@
 	}
 
 	async function handleInput(e) {
+		let caret = getCaretCharacterOffsetWithin(inputElem);
 
 		if(!isNumeric(inputElem.textContent)) {
 			// Revert if invalid input
 			value = value;
 			inputElem.textContent = valBeforeInput;
-			await tick();
-			setCaret(inputElem, caretBeforeInput);
+			caret = caretBeforeInput;
 		} else if(inputElem.textContent === "") {
 			// Set val to default if string is empty
 			value = defaultVal;
 			inputElem.textContent = "" + defaultVal;
-			await tick();
-			setCaret(inputElem, 1);
+			caret = 1;
 		} else if(parseFloat(inputElem.textContent) && inputElem.textContent.startsWith('0')) {
 			// Remove leading 0s
 			const stripped = inputElem.textContent.replace(/\D|^0+/g, "");
 			const diff = inputElem.textContent.length - stripped.length;
-			const caret = getCaretCharacterOffsetWithin(inputElem);
-
 			value = parseFloat(inputElem.textContent);
-			await tick();
-			setCaret(inputElem, caret-diff);
+			caret -= diff;
 		} else {
-			const caret = getCaretCharacterOffsetWithin(inputElem);
 			value = parseFloat(inputElem.textContent);
-			await tick();
-			setCaret(inputElem, caret);
 		}
+
+		await tick();
+		setCaret(inputElem, caret);
 	}
 
 	onMount(() => {
