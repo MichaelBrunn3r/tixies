@@ -5,7 +5,7 @@ export class Tixy {
 	speed: number
 	comments: string[]
 
-	constructor(name: string, code: string, n: number = 16, speed: number = 10, comments = null) {
+	constructor(name: string, code: string, n: number = 16, speed: number = 100, comments = null) {
 		this.name = name;
 		this.code = code;
 		this.n = n;
@@ -51,7 +51,7 @@ function createTransformFunction(code: string) {
 	}
 }
 
-const frameAdjustmentFactor = 1000;
+const frameAdjustmentFactor = 10000;
 function adjustFrame(frame: number, speed: number) {
 	return frame/frameAdjustmentFactor*speed;
 }
@@ -65,8 +65,8 @@ registerGallery('triangle-up', new Tixy('Flying Triangle', 'let h=t*3%n;return y
 registerGallery('grid', new Tixy('Grid', 'return x%4 && y%4', 16))
 registerGallery('sirpinski', new Tixy('<a href="https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle">Sirpinski </a>', 'return i & x & y & t*2', 16))
 registerGallery('square-collapse', new Tixy('Collapsing Square', 'let v = ceil(t%(n/2)-1);return (x == v || n-1-x == v || y == v || n-1-y == v) && (x>v-1 && x<n-v && y>v-1 && y<n-v)'))
-registerGallery('ladder-blink', new Tixy('Blinking Ladder', 'let px = floor(t%n);let py = floor((t/n)%n);return (x == (py%2 ? px : n-1-px) && y == py) * (i%2*-2+1)', 6, 20))
-registerGallery('swipper', new Tixy('Swipper', 'return abs(floor(sin(t)*(n-1))) == x', 16, 10))
+registerGallery('ladder-blink', new Tixy('Blinking Ladder', 'let px = floor(t%n);let py = floor((t/n)%n);return (x == (py%2 ? px : n-1-px) && y == py) * (i%2*-2+1)', 6, 200))
+registerGallery('swipper', new Tixy('Swipper', 'return abs(floor(sin(t)*(n-1))) == x', 16))
 
 registerTutorial('tut-start', new Tixy('', 'return sin(y/8+t);', 16, 10, ['Inspired by <a href="https://tixy.land">tixy.land</a>', 'Start the tutorial by clicking the dots']))
 registerTutorial('tut-visibility', new Tixy('', 'return i%3 == 0;', 16, 0, ['0/1 = false/true => hide/show dots']))
