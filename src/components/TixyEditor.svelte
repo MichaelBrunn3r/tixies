@@ -1,9 +1,9 @@
 <script lang="ts">
 	import CanvasTixy from '../components/CanvasTixy.svelte';
-	import InlineInput from 'svelte-inline-input';
 	import tixies from '../data/tixies';
 	import { onMount, createEventDispatcher } from 'svelte';
 	import MediaControls from './MediaControls.svelte';
+	import InlineNumberInput from './InlineNumberInput.svelte';
 
 	export let tixyId: string;
 	let dispatch = createEventDispatcher();
@@ -120,8 +120,8 @@
 		<span>Time: {Math.round(tixies.adjustTime(time,speed))}</span>
 		<MediaControls bind:playing={animationPlaying} on:toggle={toggleAnimation} on:forwards={forwards} on:backwards={backwards}/>
 		<div class="param-control-wrapper">
-			<div>Speed:<InlineInput type="number" bind:value={speed}/>,</div>
-			<div>Dots:<InlineInput type="number" bind:value={n}/></div>
+			Speed:<InlineNumberInput bind:value={speed} shiftStep={10}></InlineNumberInput>
+			, Dots:<InlineNumberInput bind:value={n} shiftStep={10}></InlineNumberInput>
 		</div>
 	</div>
 
