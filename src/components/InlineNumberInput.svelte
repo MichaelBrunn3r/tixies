@@ -10,13 +10,21 @@
 	export let step = 1;
 	export let altStep: number = null;
 	export let shiftStep: number = null;
-	export let displayFactor = 1;
 	export let decimals = 0;
 
 	let inputElem: HTMLDivElement;
 	let caretBeforeInput;
+	$: factor = Math.pow(10, decimals);
 
-	$: if(inputElem) inputElem.textContent = "" + Math.round(value * displayFactor * Math.pow(10, decimals)) / Math.pow(10, decimals);
+	$: if(inputElem) inputElem.textContent = valToDisplay(value);
+
+	function valToDisplay(val: number) {
+		return "" + Math.round(val * factor) / factor;
+	}
+
+	function displayToVal(display: string) {
+		return Math.round(parseFloat(display) * factor) / factor;
+	}
 
 	function handleMousewheel(e: WheelEvent) {
 		if(e.cancelable) e.preventDefault();
@@ -26,7 +34,7 @@
 		if(altStep != null && e.altKey) amount = altStep;
 		if(shiftStep != null && e.shiftKey) amount = shiftStep;
 
-		let newVal = value + Math.sign(e.deltaY*-1) * amount / displayFactor;
+		let newVal = value + Math.sign(e.deltaY*-1) * amount;
 		if(min) newVal = Math.max(min, newVal);
 		if(max) newVal = Math.min(max, newVal);
 		value = newVal;
@@ -45,7 +53,7 @@
 
 	async function handleInput(e) {
 		let caret = getCaretCharacterOffsetWithin(inputElem);
-		let newVal = parseFloat(inputElem.textContent);
+		let newVal = displayToVal(inputElem.textContent);
 		let newTextVal = inputElem.textContent;
 
 		if(!isNumeric(newTextVal)) {
@@ -60,19 +68,17 @@
 			// Remove leading 0s
 			const stripped = newTextVal.replace(/\D|^0+/g, "");
 			const diff = newTextVal.length - stripped.length;
-			newVal = parseFloat(newTextVal);
+			newVal = displayToVal(newTextVal);
 			caret -= diff;
 		}
 
 		// Update value
 		if(min) newVal = Math.max(min, newVal);
 		if(max) newVal = Math.min(max, newVal);
-		newVal /= displayFactor;
-		newVal = Math.round(newVal * Math.pow(10, decimals)) / Math.pow(10, decimals)
 		value = newVal;
 
 		// Update display
-		inputElem.textContent = "" + value;
+		inputElem.textContent = valToDisplay(value);
 		await tick();
 		setCaret(inputElem, Math.min(caret , inputElem.textContent.length));
 	}
