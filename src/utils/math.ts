@@ -55,3 +55,7 @@ export function bin(x: string) {
 export function toBin(x: number) {
 	return x.toString(2);
 }
+
+export function isNumeric(number) {
+	return !isNaN(number);
+}

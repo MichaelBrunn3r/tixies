@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick, createEventDispatcher, onMount } from 'svelte';
+	import { isNumeric } from '../utils/math';
 
 	export let step = 1;
 	export let value = 0;
@@ -48,8 +49,8 @@
 		}
 	}
 
-	function isNumeric(number) {
-		return !isNaN(number);
+
+
 	}
 
 	onMount(() => {
