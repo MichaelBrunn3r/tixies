@@ -1,18 +1,23 @@
 <script lang="ts">
-	import { tick, createEventDispatcher, onMount } from 'svelte';
-	import { isNumeric } from '../utils/math';
+	import { tick, onMount } from 'svelte';
+	import { isNumeric, constrain } from '../utils/math';
+	import { getCaretCharacterOffsetWithin, setCaret } from '../utils/selection';
 
-	export let step = 1;
 	export let value = 0;
-	export let altStep: number = null;
-	export let shiftStep: number = null;
+	export let defaultVal = 0;
 	export let min = 0;
 	export let max = "any";
+	export let step = 1;
+	export let altStep: number = null;
+	export let shiftStep: number = null;
 
-	let defaultVal = value;
-
-	let dispatch = createEventDispatcher();
 	let inputElem: HTMLDivElement;
+	let caretBeforeInput;
+	let valBeforeInput;
+
+	$: if(inputElem) inputElem.textContent = "" + value
+	$: console.log(value);
+
 
 	function handleMousewheel(e: WheelEvent) {
 		if(e.cancelable) e.preventDefault();
@@ -26,50 +31,58 @@
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		const k = e.key;
-
-		console.log(e);
-
-
-		if(k == "Backspace" || k == "ArrowLeft" || k == "ArrowRight") return;
-		if(e.ctrlKey && (k == 'a' || k == 'c')) return;
-
-		// Cancel event if the value would not be a number anymore
-		if(!isNumeric(value + e.key) && e.cancelable) {
+		// Don't allow whitespace
+		if(e.key.replace(/\s/g,"") == "") {
 			e.preventDefault();
+			return;
 		}
+
+		// Save information for resets
+		caretBeforeInput = getCaretCharacterOffsetWithin(inputElem);
+		valBeforeInput = inputElem.textContent;
+
 	}
 
-	let prevVal = "0";
-	function handleInput(e) {
+	async function handleInput(e) {
+
 		if(!isNumeric(inputElem.textContent)) {
-			inputElem.textContent = prevVal;
+			// Revert if invalid input
+			value = value;
+			inputElem.textContent = valBeforeInput;
+			await tick();
+			setCaret(inputElem, caretBeforeInput);
+		} else if(inputElem.textContent === "") {
+			// Set val to default if string is empty
+			value = defaultVal;
+			inputElem.textContent = "" + defaultVal;
+			await tick();
+			setCaret(inputElem, 1);
+		} else if(parseFloat(inputElem.textContent) && inputElem.textContent.startsWith('0')) {
+			// Remove leading 0s
+			const stripped = inputElem.textContent.replace(/\D|^0+/g, "");
+			const diff = inputElem.textContent.length - stripped.length;
+			const caret = getCaretCharacterOffsetWithin(inputElem);
+
+			value = parseFloat(inputElem.textContent);
+			await tick();
+			setCaret(inputElem, caret-diff);
 		} else {
-			prevVal = inputElem.textContent;
+			const caret = getCaretCharacterOffsetWithin(inputElem);
+			value = parseFloat(inputElem.textContent);
+			await tick();
+			setCaret(inputElem, caret);
 		}
-	}
-
-
-
 	}
 
 	onMount(() => {
-		inputElem.addEventListener('wheel', handleMousewheel)
+		inputElem.addEventListener('wheel', handleMousewheel);
 	})
 </script>
-
-<style>
-	div {
-		min-width: 10px;
-		min-height: 1em;
-		cursor: text;
-	}
-</style>
 
 <div
 	class="input"
 	bind:this={inputElem}
 	contenteditable=true
-	on:input={handleInput}>
-	{value}
+	on:input={handleInput}
+	on:keydown={handleKeyDown}>
 </div>
