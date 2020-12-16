@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { tick, onMount } from 'svelte';
-	import { isNumeric, constrain } from '../utils/math';
+	import { isNumeric } from '../utils/math';
 	import { getCaretCharacterOffsetWithin, setCaret } from '../utils/selection';
 
 	export let value = 0;
 	export let defaultVal = 0;
-	export let min = -10;
-	export let max = 10;
+	export let min = undefined;
+	export let max = undefined;
 	export let step = 1;
 	export let altStep: number = null;
 	export let shiftStep: number = null;
@@ -15,8 +15,6 @@
 	let caretBeforeInput;
 
 	$: if(inputElem) inputElem.textContent = "" + value
-	$: console.log(value);
-
 
 	function handleMousewheel(e: WheelEvent) {
 		if(e.cancelable) e.preventDefault();
@@ -72,7 +70,7 @@
 		// Update display
 		inputElem.textContent = "" + value;
 		await tick();
-		setCaret(inputElem, caret);
+		setCaret(inputElem, Math.min(caret , inputElem.textContent.length));
 	}
 
 	onMount(() => {
