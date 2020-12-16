@@ -10,11 +10,13 @@
 	export let step = 1;
 	export let altStep: number = null;
 	export let shiftStep: number = null;
+	export let displayFactor = 1;
+	export let decimals = 0;
 
 	let inputElem: HTMLDivElement;
 	let caretBeforeInput;
 
-	$: if(inputElem) inputElem.textContent = "" + value
+	$: if(inputElem) inputElem.textContent = "" + Math.round(value * displayFactor * Math.pow(10, decimals)) / Math.pow(10, decimals);
 
 	function handleMousewheel(e: WheelEvent) {
 		if(e.cancelable) e.preventDefault();
@@ -24,7 +26,7 @@
 		if(altStep != null && e.altKey) amount = altStep;
 		if(shiftStep != null && e.shiftKey) amount = shiftStep;
 
-		let newVal = value + Math.sign(e.deltaY*-1) * amount;
+		let newVal = value + Math.sign(e.deltaY*-1) * amount / displayFactor;
 		if(min) newVal = Math.max(min, newVal);
 		if(max) newVal = Math.min(max, newVal);
 		value = newVal;
@@ -65,6 +67,8 @@
 		// Update value
 		if(min) newVal = Math.max(min, newVal);
 		if(max) newVal = Math.min(max, newVal);
+		newVal /= displayFactor;
+		newVal = Math.round(newVal * Math.pow(10, decimals)) / Math.pow(10, decimals)
 		value = newVal;
 
 		// Update display
