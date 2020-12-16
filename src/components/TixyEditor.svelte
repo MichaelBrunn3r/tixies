@@ -66,8 +66,11 @@
 	}
 
 	.code-input {
-		width: 100%;
 		margin-left: 2em;
+		margin-right: 2em;
+		overflow-wrap: normal;
+	}
+
 	}
 
 	.code {
