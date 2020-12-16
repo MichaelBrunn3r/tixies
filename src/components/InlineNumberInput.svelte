@@ -78,10 +78,10 @@
 	})
 </script>
 
-<div
+<span
 	class="input"
 	bind:this={inputElem}
 	contenteditable=true
 	on:input={handleInput}
 	on:keydown={handleKeyDown}>
-</div>
+</span>
