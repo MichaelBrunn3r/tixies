@@ -56,7 +56,7 @@ function createTransformFunction(code: string) {
 	}
 
 	return [
-		fn ? fn : () => 1,
+		fn,
 		error
 	]
 }

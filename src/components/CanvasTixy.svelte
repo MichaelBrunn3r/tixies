@@ -34,7 +34,9 @@
 
 	let transform;
 	$: if(code) {
-		[transform, hasErrorInCode] = tixies.createTransformFunction(code);
+		let fn;
+		[fn, hasErrorInCode] = tixies.createTransformFunction(code);
+		if(!hasErrorInCode) transform = fn;
 	}
 	$: if(gl && transform) {
 		render();
