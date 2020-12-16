@@ -45,27 +45,26 @@
 
 	async function handleInput(e) {
 		let caret = getCaretCharacterOffsetWithin(inputElem);
+		let newVal = parseFloat(inputElem.textContent);
 
 		if(!isNumeric(inputElem.textContent)) {
 			// Revert if invalid input
-			value = value;
 			inputElem.textContent = valBeforeInput;
 			caret = caretBeforeInput;
 		} else if(inputElem.textContent === "") {
 			// Set val to default if string is empty
-			value = defaultVal;
+			newVal = defaultVal;
 			inputElem.textContent = "" + defaultVal;
 			caret = 1;
 		} else if(parseFloat(inputElem.textContent) && inputElem.textContent.startsWith('0')) {
 			// Remove leading 0s
 			const stripped = inputElem.textContent.replace(/\D|^0+/g, "");
 			const diff = inputElem.textContent.length - stripped.length;
-			value = parseFloat(inputElem.textContent);
 			caret -= diff;
-		} else {
-			value = parseFloat(inputElem.textContent);
 		}
 
+		// Update value and caret position
+		value = newVal;
 		await tick();
 		setCaret(inputElem, caret);
 	}
